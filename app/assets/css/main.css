@@ -1,2 +1,166 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* Brand scales — semantic `primary` / `secondary` map to these palettes (app.config). */
+@theme static {
+  --color-green-50: #effdf5;
+  --color-green-100: #d3fae8;
+  --color-green-200: #9cf0cc;
+  --color-green-300: #5ee3a8;
+  --color-green-400: #35d680;
+  --color-green-500: #25d466;
+  --color-green-600: #1fad58;
+  --color-green-700: #1a8648;
+  --color-green-800: #176a3c;
+  --color-green-900: #145732;
+  --color-green-950: #063921;
+
+  --color-fuchsia-50: #fff0f8;
+  --color-fuchsia-100: #ffe0f3;
+  --color-fuchsia-200: #ffc1e6;
+  --color-fuchsia-300: #ff91cf;
+  --color-fuchsia-400: #ff57b3;
+  --color-fuchsia-500: #ff2d92;
+  --color-fuchsia-600: #db156f;
+  --color-fuchsia-700: #b60f5c;
+  --color-fuchsia-800: #95104e;
+  --color-fuchsia-900: #7c1045;
+  --color-fuchsia-950: #4a0424;
+}
+
+@layer components {
+  .clay-card {
+    border-radius: 1.5rem;
+    border-width: 3px;
+    border-style: solid;
+    border-color: color-mix(in oklab, var(--color-green-300) 55%, white 45%);
+    background: color-mix(in oklab, white 78%, var(--color-green-50) 22%);
+    box-shadow:
+      10px 10px 22px color-mix(in oklab, var(--color-slate-900) 12%, transparent),
+      -8px -8px 20px color-mix(in oklab, white 85%, transparent),
+      inset 2px 2px 4px color-mix(in oklab, white 70%, transparent),
+      inset -3px -3px 8px color-mix(in oklab, var(--color-green-500) 8%, transparent);
+  }
+
+  .dark .clay-card {
+    border-color: color-mix(in oklab, var(--color-green-500) 45%, var(--color-slate-800) 55%);
+    background: color-mix(in oklab, var(--color-slate-900) 88%, var(--color-green-950) 12%);
+    box-shadow:
+      12px 12px 28px color-mix(in oklab, black 55%, transparent),
+      -4px -4px 16px color-mix(in oklab, var(--color-green-400) 6%, transparent),
+      inset 1px 1px 2px color-mix(in oklab, white 10%, transparent),
+      inset -4px -4px 14px color-mix(in oklab, black 45%, transparent);
+  }
+
+  .clay-snippet {
+    border-radius: 1rem;
+    border-width: 2px;
+    border-style: solid;
+    border-color: color-mix(in oklab, var(--color-fuchsia-200) 60%, var(--color-green-200) 40%);
+    background: color-mix(in oklab, var(--color-slate-50) 92%, var(--color-green-50) 8%);
+    box-shadow:
+      6px 6px 14px color-mix(in oklab, var(--color-slate-900) 8%, transparent),
+      inset 1px 1px 0 color-mix(in oklab, white 90%, transparent);
+  }
+
+  .dark .clay-snippet {
+    border-color: color-mix(in oklab, var(--color-fuchsia-800) 50%, var(--color-green-900) 50%);
+    background: color-mix(in oklab, var(--color-slate-950) 94%, var(--color-green-950) 6%);
+    box-shadow:
+      6px 6px 18px color-mix(in oklab, black 40%, transparent),
+      inset 1px 1px 0 color-mix(in oklab, white 6%, transparent);
+  }
+
+  /* Social OAuth: native buttons — clearer type + icon tile than nested UButton */
+  .social-oauth-btn {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.875rem;
+    align-items: center;
+    gap: 0.75rem;
+    overflow: visible;
+    box-sizing: border-box;
+    border-radius: 0.875rem;
+    border: 1px solid color-mix(in oklab, var(--color-slate-300) 70%, transparent);
+    padding: 0.625rem 0.875rem;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    background: color-mix(in oklab, white 94%, var(--color-slate-50) 6%);
+    box-shadow:
+      0 1px 2px color-mix(in oklab, var(--color-slate-900) 5%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 88%, transparent);
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .social-oauth-btn:hover {
+    border-color: color-mix(in oklab, var(--color-green-400) 40%, var(--color-slate-300) 60%);
+    background: color-mix(in oklab, white 88%, var(--color-green-50) 12%);
+    box-shadow:
+      0 2px 10px color-mix(in oklab, var(--color-slate-900) 7%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 92%, transparent);
+  }
+
+  .social-oauth-btn:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, white 100%, transparent),
+      0 0 0 4px var(--color-green-500);
+  }
+
+  .dark .social-oauth-btn {
+    border-color: color-mix(in oklab, var(--color-slate-600) 75%, transparent);
+    background: color-mix(in oklab, var(--color-slate-800) 88%, var(--color-slate-900) 12%);
+    box-shadow:
+      0 1px 2px color-mix(in oklab, black 40%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 6%, transparent);
+  }
+
+  .dark .social-oauth-btn:hover {
+    border-color: color-mix(in oklab, var(--color-green-500) 45%, var(--color-slate-600) 55%);
+    background: color-mix(in oklab, var(--color-slate-800) 78%, var(--color-slate-700) 22%);
+  }
+
+  .dark .social-oauth-btn:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--color-slate-950),
+      0 0 0 4px var(--color-green-400);
+  }
+
+  .social-oauth-icon-wrap {
+    display: flex;
+    height: 2.5rem;
+    width: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.625rem;
+    background: color-mix(in oklab, var(--color-slate-100) 88%, white 12%);
+    box-shadow: inset 0 1px 2px color-mix(in oklab, var(--color-slate-900) 5%, transparent);
+  }
+
+  .dark .social-oauth-icon-wrap {
+    background: color-mix(in oklab, var(--color-slate-900) 90%, var(--color-slate-700) 10%);
+    box-shadow: inset 0 1px 2px color-mix(in oklab, black 35%, transparent);
+  }
+
+  .social-oauth-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: start;
+    overflow: visible;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-slate-800);
+  }
+
+  .dark .social-oauth-label {
+    color: var(--color-slate-100);
+  }
+}
