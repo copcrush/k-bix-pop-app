@@ -5,19 +5,32 @@ definePageMeta({
 
 const email = ref('')
 const password = ref('')
+const errorMessage = ref('')
+const auth = useAuth()
+const { t } = useKbixLocale()
+
+async function onSubmit() {
+  errorMessage.value = ''
+  const res = await auth.login(email.value, password.value)
+  if (res.ok) {
+    await navigateTo('/')
+    return
+  }
+  errorMessage.value = res.message
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-10">
     <div class="hidden flex-1 flex-col justify-center lg:flex">
       <p class="mb-3 text-xs font-medium tracking-widest text-fuchsia-600 uppercase dark:text-fuchsia-400">
-        k-bix-pop
+        {{ t('login.heroBrand') }}
       </p>
       <h1 class="text-balance text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
-        Your stage for K-pop picks
+        {{ t('login.heroTitle') }}
       </h1>
       <p class="mt-2 max-w-sm text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-        Log in to shop official merch, albums, and concert goods — and keep every comeback on your radar.
+        {{ t('login.heroSubtitle') }}
       </p>
       <div class="clay-snippet mt-6 max-w-md space-y-4 p-5 text-sm leading-snug">
         <div class="flex gap-3">
@@ -26,10 +39,10 @@ const password = ref('')
           </span>
           <div>
             <p class="font-semibold text-slate-900 dark:text-white">
-              Merch & albums
+              {{ t('login.heroMerchTitle') }}
             </p>
             <p class="mt-0.5 text-slate-600 dark:text-slate-400">
-              Official releases, lightsticks, and fan-made favorites.
+              {{ t('login.heroMerchBody') }}
             </p>
           </div>
         </div>
@@ -39,10 +52,10 @@ const password = ref('')
           </span>
           <div>
             <p class="font-semibold text-slate-900 dark:text-white">
-              Orders you can trust
+              {{ t('login.heroOrdersTitle') }}
             </p>
             <p class="mt-0.5 text-slate-600 dark:text-slate-400">
-              Clear tracking from checkout to your doorstep.
+              {{ t('login.heroOrdersBody') }}
             </p>
           </div>
         </div>
@@ -52,10 +65,10 @@ const password = ref('')
           </span>
           <div>
             <p class="font-semibold text-slate-900 dark:text-white">
-              Drops & restocks
+              {{ t('login.heroDropsTitle') }}
             </p>
             <p class="mt-0.5 text-slate-600 dark:text-slate-400">
-              Wishlist bias picks and catch limited runs early.
+              {{ t('login.heroDropsBody') }}
             </p>
           </div>
         </div>
@@ -65,39 +78,49 @@ const password = ref('')
     <div class="mx-auto w-full max-w-md shrink-0 lg:mx-0 lg:w-[min(100%,28rem)]">
       <div class="mb-5 text-center lg:hidden">
         <p class="text-xs font-medium tracking-widest text-fuchsia-600 uppercase dark:text-fuchsia-400">
-          k-bix-pop
+          {{ t('login.heroBrand') }}
         </p>
         <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          K-pop merch & drops
+          {{ t('login.mobileTagline') }}
         </p>
       </div>
 
       <div class="clay-card px-6 py-8 sm:px-8 sm:py-9">
         <div class="mb-6 text-center lg:text-start">
+          <p class="text-xs font-medium tracking-widest text-fuchsia-600 uppercase dark:text-fuchsia-400">
+            {{ t('login.welcomeBack') }}
+          </p>
           <h2 class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">
-            Sign in
+            {{ t('login.title') }}
           </h2>
         </div>
 
-        <form class="flex flex-col gap-4" @submit.prevent>
-          <UFormField label="Email" name="email" required>
+        <p
+          v-if="errorMessage"
+          class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200"
+        >
+          {{ errorMessage }}
+        </p>
+
+        <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
+          <UFormField :label="t('login.emailLabel')" name="email" required>
             <UInput
               v-model="email"
               type="email"
               autocomplete="email"
-              placeholder="example@example.com"
+              :placeholder="t('login.emailPlaceholder')"
               icon="i-lucide-mail"
               size="lg"
               class="w-full"
             />
           </UFormField>
 
-          <UFormField label="Password" name="password" required>
+          <UFormField :label="t('login.passwordLabel')" name="password" required>
             <UInput
               v-model="password"
               type="password"
               autocomplete="current-password"
-              placeholder="••••••••"
+              :placeholder="t('login.passwordPlaceholder')"
               icon="i-lucide-lock"
               size="lg"
               class="w-full"
@@ -109,7 +132,7 @@ const password = ref('')
               to="/forgot-password"
               inactive-class="text-sm font-medium text-fuchsia-600 hover:text-fuchsia-700 dark:text-fuchsia-400 dark:hover:text-fuchsia-300"
             >
-              Forgot password?
+              {{ t('login.forgotPassword') }}
             </ULink>
           </div>
 
@@ -119,21 +142,22 @@ const password = ref('')
             block
             size="lg"
             class="mt-1 font-semibold"
+            :loading="auth.pending"
           >
-            Sign in
+            {{ t('login.submit') }}
           </UButton>
         </form>
 
         <USeparator
           class="my-6"
-          label="Or continue with"
+          :label="t('login.socialSeparator')"
         />
 
         <!-- Full-width stack: card is ~max-w-md — 3 columns always clipped long provider names -->
         <div class="flex flex-col gap-2.5">
           <button
             type="button"
-            aria-label="Continue with Google"
+            :aria-label="t('login.oauthGoogleAria')"
             class="social-oauth-btn group"
           >
             <span class="social-oauth-icon-wrap">
@@ -142,11 +166,11 @@ const password = ref('')
                 class="size-[22px] text-slate-700 transition-transform duration-200 group-hover:scale-105 dark:text-slate-200"
               />
             </span>
-            <span class="social-oauth-label">Google</span>
+            <span class="social-oauth-label">{{ t('login.oauthGoogle') }}</span>
           </button>
           <button
             type="button"
-            aria-label="Continue with Facebook"
+            :aria-label="t('login.oauthFacebookAria')"
             class="social-oauth-btn group"
           >
             <span class="social-oauth-icon-wrap">
@@ -155,11 +179,11 @@ const password = ref('')
                 class="size-[22px] text-[#1877F2] transition-transform duration-200 group-hover:scale-105"
               />
             </span>
-            <span class="social-oauth-label">Facebook</span>
+            <span class="social-oauth-label">{{ t('login.oauthFacebook') }}</span>
           </button>
           <button
             type="button"
-            aria-label="Continue with LINE"
+            :aria-label="t('login.oauthLineAria')"
             class="social-oauth-btn group"
           >
             <span class="social-oauth-icon-wrap">
@@ -168,17 +192,17 @@ const password = ref('')
                 class="size-[22px] text-[#06C755] transition-transform duration-200 group-hover:scale-105"
               />
             </span>
-            <span class="social-oauth-label">LINE</span>
+            <span class="social-oauth-label">{{ t('login.oauthLine') }}</span>
           </button>
         </div>
 
         <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-          New here?
+          {{ t('login.newHere') }}
           <ULink
             to="/register"
             inactive-class="ms-1 font-semibold text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
           >
-            Create account
+            {{ t('login.createAccountLink') }}
           </ULink>
         </p>
       </div>

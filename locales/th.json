@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "หน้าแรก",
+    "cart": "ตะกร้า",
+    "login": "เข้าสู่ระบบ",
+    "register": "สมัครสมาชิก",
+    "logout": "ออกจากระบบ",
+    "admin": "ผู้ดูแลระบบ",
+    "shipTo": "จัดส่งไปที่",
+    "address": "ที่อยู่",
+    "country": "ประเทศ",
+    "saveShipping": "บันทึก",
+    "roleAdmin": "ผู้ดูแล",
+    "roleCustomer": "ลูกค้า",
+    "account": "บัญชี",
+    "language": "ภาษา"
+  },
+  "login": {
+    "heroBrand": "k-bix-pop",
+    "heroTitle": "เวทีของคุณสำหรับของสะสม K-pop",
+    "heroSubtitle": "เข้าสู่ระบบเพื่อช้อปเมิร์ชออฟฟิเชียล อัลบั้ม และของแฟนคอน — ติดตามคัมแบ็กได้ทุกครั้ง",
+    "heroMerchTitle": "เมิร์ชและอัลบั้ม",
+    "heroMerchBody": "อัลบั้มออฟฟิเชียล แท่งไฟ และของแฟนเมดคุณภาพ",
+    "heroOrdersTitle": "คำสั่งซื้อที่ไว้ใจได้",
+    "heroOrdersBody": "ติดตามพัสดุจากชำระเงินจนถึงหน้าบ้าน",
+    "heroDropsTitle": "ดรอปและรีสต็อก",
+    "heroDropsBody": "เพิ่มวิชลิสต์ของที่อยากได้ และจับจองรอบจำกัดได้เร็วขึ้น",
+    "mobileTagline": "เมิร์ช K-pop และดรอป",
+    "welcomeBack": "ยินดีต้อนรับกลับ",
+    "title": "เข้าสู่ระบบ",
+    "emailLabel": "อีเมล",
+    "passwordLabel": "รหัสผ่าน",
+    "emailPlaceholder": "example@example.com",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "submit": "เข้าสู่ระบบ",
+    "socialSeparator": "หรือดำเนินการต่อด้วย",
+    "oauthGoogle": "Google",
+    "oauthFacebook": "Facebook",
+    "oauthLine": "LINE",
+    "oauthGoogleAria": "ดำเนินการต่อด้วย Google",
+    "oauthFacebookAria": "ดำเนินการต่อด้วย Facebook",
+    "oauthLineAria": "ดำเนินการต่อด้วย LINE",
+    "newHere": "ยังไม่มีบัญชี?",
+    "createAccountLink": "สร้างบัญชี"
+  },
+  "signup": {
+    "eyebrow": "k-bix-pop",
+    "title": "สร้างบัญชี",
+    "subtitle": "เข้าร่วม k-bix-pop เพื่อบันทึกที่อยู่ ติดตามคำสั่งซื้อ และรับแจ้งเตือนรีสต็อก",
+    "emailLabel": "อีเมล",
+    "passwordLabel": "รหัสผ่าน",
+    "firstNameLabel": "ชื่อ",
+    "lastNameLabel": "นามสกุล",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "อย่างน้อย 6 ตัวอักษร",
+    "optionalPlaceholder": "ไม่บังคับ",
+    "submit": "สร้างบัญชี",
+    "alreadyHave": "มีบัญชีแล้ว?",
+    "signInLink": "เข้าสู่ระบบ"
+  },
+  "common": {
+    "brand": "k-bix-pop"
+  },
+  "footer": {
+    "tagline": "k-bix-pop"
+  }
+}

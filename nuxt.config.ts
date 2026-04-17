@@ -6,5 +6,11 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/ui'],
   css: ['~/assets/css/main.css'],
-  devtools: { enabled: true }
+  devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8888/api',
+    },
+  },
 })

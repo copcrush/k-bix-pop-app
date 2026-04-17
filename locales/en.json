@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "Home",
+    "cart": "Cart",
+    "login": "Sign in",
+    "register": "Register",
+    "logout": "Log out",
+    "admin": "Admin",
+    "shipTo": "Ship to",
+    "address": "Address",
+    "country": "Country",
+    "saveShipping": "Save",
+    "roleAdmin": "Admin",
+    "roleCustomer": "Customer",
+    "account": "Account",
+    "language": "Language"
+  },
+  "login": {
+    "heroBrand": "k-bix-pop",
+    "heroTitle": "Your stage for K-pop picks",
+    "heroSubtitle": "Log in to shop official merch, albums, and concert goods — and keep every comeback on your radar.",
+    "heroMerchTitle": "Merch & albums",
+    "heroMerchBody": "Official releases, lightsticks, and fan-made favorites.",
+    "heroOrdersTitle": "Orders you can trust",
+    "heroOrdersBody": "Clear tracking from checkout to your doorstep.",
+    "heroDropsTitle": "Drops & restocks",
+    "heroDropsBody": "Wishlist bias picks and catch limited runs early.",
+    "mobileTagline": "K-pop merch & drops",
+    "welcomeBack": "Welcome back",
+    "title": "Sign in",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "emailPlaceholder": "example@example.com",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot password?",
+    "submit": "Sign in",
+    "socialSeparator": "Or continue with",
+    "oauthGoogle": "Google",
+    "oauthFacebook": "Facebook",
+    "oauthLine": "LINE",
+    "oauthGoogleAria": "Continue with Google",
+    "oauthFacebookAria": "Continue with Facebook",
+    "oauthLineAria": "Continue with LINE",
+    "newHere": "New here?",
+    "createAccountLink": "Create account"
+  },
+  "signup": {
+    "eyebrow": "k-bix-pop",
+    "title": "Create account",
+    "subtitle": "Join k-bix-pop to save addresses, track orders, and get restock alerts.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "At least 6 characters",
+    "optionalPlaceholder": "Optional",
+    "submit": "Create account",
+    "alreadyHave": "Already have an account?",
+    "signInLink": "Sign in"
+  },
+  "common": {
+    "brand": "k-bix-pop"
+  },
+  "footer": {
+    "tagline": "k-bix-pop"
+  }
+}
