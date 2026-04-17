@@ -14,9 +14,12 @@
         class="absolute bottom-0 left-1/3 size-[20rem] rounded-full bg-fuchsia-200/25 blur-3xl dark:bg-green-900/20"
       />
     </div>
-    <div class="relative z-10 flex min-h-dvh items-center justify-center px-4 py-12 sm:px-6">
-      <div class="w-full max-w-lg lg:max-w-5xl">
-        <slot />
+    <div class="relative z-10 flex min-h-dvh flex-col">
+      <AppNavbar />
+      <div class="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-12">
+        <div class="w-full max-w-lg lg:max-w-5xl">
+          <slot />
+        </div>
       </div>
     </div>
   </div>

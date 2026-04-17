@@ -5,7 +5,6 @@ export interface ApiErrorDto {
   error?: string
 }
 
-/** ข้อความอย่างเดียว เช่น refresh ล้มเหลว */
 export interface MessageResponseDto {
   message: string
 }
