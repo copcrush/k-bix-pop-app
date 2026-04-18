@@ -6,7 +6,24 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/ui'],
   css: ['~/assets/css/main.css'],
+  app: {
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.gstatic.com',
+          crossorigin: '',
+        },
+      ],
+    },
+  },
   devtools: { enabled: true },
+  vite: {
+    optimizeDeps: {
+      include: ['axios'],
+    },
+  },
   runtimeConfig: {
     public: {
       apiBase:
