@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-/* Brand scales — semantic `primary` / `secondary` map to these palettes (app.config). */
 @theme static {
   --color-green-50: #effdf5;
   --color-green-100: #d3fae8;
@@ -26,9 +25,168 @@
   --color-fuchsia-800: #95104e;
   --color-fuchsia-900: #7c1045;
   --color-fuchsia-950: #4a0424;
+
+  /* Shared motion — segmented toggles, nav micro-interactions */
+  --ease-kbix-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-kbix-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --duration-kbix: 280ms;
+
+  /*
+   * Theme toggle (icon + page): change ONLY these two for speed / feel.
+   * Icon uses opacity crossfade; root View Transition uses the same duration + ease.
+   */
+  --kbix-theme-motion-duration: 260ms;
+  --kbix-theme-motion-ease: cubic-bezier(0.33, 0, 0.25, 1);
+}
+
+@layer base {
+  /* Smoother root theme crossfade when using View Transitions API (Chromium, etc.) */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: var(--kbix-theme-motion-duration);
+      animation-timing-function: var(--kbix-theme-motion-ease);
+    }
+  }
+
+  button:not(:disabled):not([disabled]),
+  [type="button"]:not(:disabled):not([disabled]),
+  [type="submit"]:not(:disabled):not([disabled]),
+  [type="reset"]:not(:disabled):not([disabled]),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform, filter;
+    transition-duration: var(--duration-kbix, 220ms);
+    transition-timing-function: var(--ease-kbix-out, ease);
+  }
+
+  button:disabled,
+  button[disabled],
+  [type="button"]:disabled,
+  [type="submit"]:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  a[href]:not([href=""]):not([aria-disabled="true"]) {
+    cursor: pointer;
+    transition-property: color, text-decoration-color, opacity;
+    transition-duration: var(--duration-kbix, 220ms);
+    transition-timing-function: var(--ease-kbix-out, ease);
+  }
+
+  label[for]:not(:has(input:disabled)) {
+    cursor: pointer;
+  }
+
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    button:not(:disabled):not([disabled]):not([aria-busy="true"]):hover,
+    [type="button"]:not(:disabled):not([disabled]):hover,
+    [type="submit"]:not(:disabled):not([disabled]):hover {
+      filter: brightness(0.97);
+    }
+
+    .dark button:not(:disabled):not([disabled]):not([aria-busy="true"]):hover,
+    .dark [type="button"]:not(:disabled):not([disabled]):hover,
+    .dark [type="submit"]:not(:disabled):not([disabled]):hover {
+      filter: brightness(1.05);
+    }
+  }
+
+  button:not(:disabled):active,
+  [type="button"]:not(:disabled):active,
+  [type="submit"]:not(:disabled):active {
+    transform: scale(0.987);
+  }
 }
 
 @layer components {
+  /* Locale EN | TH — sliding selection pill */
+  .kbix-locale-switch {
+    position: relative;
+    display: inline-flex;
+    isolation: isolate;
+  }
+
+  .kbix-locale-switch__pill {
+    position: absolute;
+    top: 0.125rem;
+    bottom: 0.125rem;
+    left: 0.125rem;
+    z-index: 0;
+    width: calc((100% - 0.25rem) / 2);
+    border-radius: 0.5rem;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-green-400) 35%, white 65%),
+      color-mix(in oklab, var(--color-green-500) 45%, var(--color-fuchsia-100) 55%)
+    );
+    box-shadow:
+      0 1px 3px color-mix(in oklab, var(--color-slate-900) 12%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 70%, transparent);
+    /* Inline `transform: translateX(...)` — Tailwind `translate-*` utilities use the `translate` property, so they did not animate with `transition: transform` alone. */
+    transition:
+      transform var(--duration-kbix) var(--ease-kbix-spring),
+      opacity 0.2s var(--ease-kbix-out);
+    will-change: transform;
+  }
+
+  .dark .kbix-locale-switch__pill {
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-green-600) 40%, var(--color-slate-900) 60%),
+      color-mix(in oklab, var(--color-green-800) 50%, var(--color-slate-800) 50%)
+    );
+    box-shadow:
+      0 1px 4px color-mix(in oklab, black 45%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kbix-locale-switch__pill {
+      transition: none;
+    }
+  }
+
+  /*
+   * Color mode icon — opacity-only crossfade (default Transition = overlap).
+   * No scale/translate so motion stays easy to tune; duration matches --kbix-theme-motion-duration.
+   */
+  .kbix-mode-icon-enter-active,
+  .kbix-mode-icon-leave-active {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity var(--kbix-theme-motion-duration) var(--kbix-theme-motion-ease);
+  }
+
+  .kbix-mode-icon-enter-from,
+  .kbix-mode-icon-leave-to {
+    opacity: 0;
+  }
+
+  .kbix-mode-icon-enter-to,
+  .kbix-mode-icon-leave-from {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kbix-mode-icon-enter-active,
+    .kbix-mode-icon-leave-active {
+      transition-duration: 0.01ms;
+    }
+  }
+
   .clay-card {
     border-radius: 1.5rem;
     border-width: 3px;
@@ -71,7 +229,6 @@
       inset 1px 1px 0 color-mix(in oklab, white 6%, transparent);
   }
 
-  /* Social OAuth: native buttons — clearer type + icon tile than nested UButton */
   .social-oauth-btn {
     display: flex;
     width: 100%;
