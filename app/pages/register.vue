@@ -8,6 +8,7 @@ const password = ref('')
 const firstName = ref('')
 const lastName = ref('')
 const errorMessage = ref('')
+const showPassword = ref(false)
 const auth = useAuth()
 const { t } = useKbixLocale()
 
@@ -54,7 +55,11 @@ async function onSubmit() {
           <UInput
             v-model="email"
             type="email"
+            inputmode="email"
             autocomplete="email"
+            autocapitalize="off"
+            autocorrect="off"
+            :spellcheck="false"
             :placeholder="t('signup.emailPlaceholder')"
             icon="i-lucide-mail"
             size="lg"
@@ -65,13 +70,31 @@ async function onSubmit() {
         <UFormField :label="t('signup.passwordLabel')" name="password" required>
           <UInput
             v-model="password"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
             autocomplete="new-password"
+            autocapitalize="off"
+            autocorrect="off"
+            :spellcheck="false"
             :placeholder="t('signup.passwordPlaceholder')"
             icon="i-lucide-lock"
             size="lg"
             class="w-full"
-          />
+          >
+            <template #trailing>
+              <UButton
+                type="button"
+                color="neutral"
+                variant="ghost"
+                square
+                size="sm"
+                class="-me-1"
+                :aria-pressed="showPassword"
+                :aria-label="showPassword ? t('signup.hidePassword') : t('signup.showPassword')"
+                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                @click.prevent="showPassword = !showPassword"
+              />
+            </template>
+          </UInput>
         </UFormField>
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">

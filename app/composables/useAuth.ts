@@ -1,8 +1,13 @@
 import { reactive } from 'vue'
 import type { AuthUser, LoginResponse, RefreshResponse, RegisterResponse } from '~/types/auth'
+import {
+  getKbixPopApiClient,
+  getKbixApiErrorMessage,
+  KBIX_ACCESS_TOKEN_STORAGE_KEY,
+} from '~~/lib/axios/k-bix-pop-api'
 
 const USER_KEY = 'kbix_user'
-const TOKEN_KEY = 'kbix_access_token'
+const TOKEN_KEY = KBIX_ACCESS_TOKEN_STORAGE_KEY
 
 export function useAuth() {
   const user = useState<AuthUser | null>('auth-user', () => null)
@@ -49,17 +54,12 @@ export function useAuth() {
     persist()
   }
 
-  function apiBase() {
-    return useRuntimeConfig().public.apiBase as string
-  }
-
   async function login(email: string, password: string) {
     pending.value = true
     try {
-      const res = await $fetch<LoginResponse>(`${apiBase()}/auth/login`, {
-        method: 'POST',
-        body: { email, password },
-        credentials: 'include',
+      const { data: res } = await getKbixPopApiClient().post<LoginResponse>('/auth/login', {
+        email,
+        password,
       })
       user.value = res.user
       accessToken.value = res.accessToken
@@ -67,9 +67,7 @@ export function useAuth() {
       return { ok: true as const }
     }
     catch (e: unknown) {
-      const err = e as { data?: { message?: string }; message?: string }
-      const message = err?.data?.message ?? err?.message ?? 'Login failed'
-      return { ok: false as const, message: String(message) }
+      return { ok: false as const, message: getKbixApiErrorMessage(e, 'Login failed') }
     }
     finally {
       pending.value = false
@@ -84,16 +82,11 @@ export function useAuth() {
   }) {
     pending.value = true
     try {
-      await $fetch<RegisterResponse>(`${apiBase()}/auth/register`, {
-        method: 'POST',
-        body: payload,
-      })
+      await getKbixPopApiClient().post<RegisterResponse>('/auth/register', payload)
       return { ok: true as const }
     }
     catch (e: unknown) {
-      const err = e as { data?: { message?: string }; message?: string }
-      const message = err?.data?.message ?? err?.message ?? 'Registration failed'
-      return { ok: false as const, message: String(message) }
+      return { ok: false as const, message: getKbixApiErrorMessage(e, 'Registration failed') }
     }
     finally {
       pending.value = false
@@ -101,10 +94,7 @@ export function useAuth() {
   }
 
   async function refreshAccessToken() {
-    const res = await $fetch<RefreshResponse>(`${apiBase()}/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-    })
+    const { data: res } = await getKbixPopApiClient().post<RefreshResponse>('/auth/refresh')
     accessToken.value = res.accessToken
     persist()
     return res
@@ -115,10 +105,8 @@ export function useAuth() {
     clear()
     if (!tok) return
     try {
-      await $fetch(`${apiBase()}/auth/logout`, {
-        method: 'POST',
+      await getKbixPopApiClient().post('/auth/logout', {}, {
         headers: { Authorization: `Bearer ${tok}` },
-        credentials: 'include',
       })
     }
     catch {
