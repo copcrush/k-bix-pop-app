@@ -100,6 +100,40 @@ export function useAuth() {
     return res
   }
 
+  async function updateProfile(payload: {
+    firstName?: string | null
+    lastName?: string | null
+  }) {
+    try {
+      const { data } = await getKbixPopApiClient().patch<AuthUser>('/users/me', payload)
+      user.value = data
+      persist()
+      return { ok: true as const }
+    }
+    catch (e: unknown) {
+      return {
+        ok: false as const,
+        message: getKbixApiErrorMessage(e, 'Could not save profile'),
+      }
+    }
+  }
+
+  async function changePassword(currentPassword: string, newPassword: string) {
+    try {
+      await getKbixPopApiClient().post('/users/me/password', {
+        currentPassword,
+        newPassword,
+      })
+      return { ok: true as const }
+    }
+    catch (e: unknown) {
+      return {
+        ok: false as const,
+        message: getKbixApiErrorMessage(e, 'Could not change password'),
+      }
+    }
+  }
+
   async function logout() {
     const tok = accessToken.value
     clear()
@@ -141,6 +175,8 @@ export function useAuth() {
     hydrate,
     login,
     register,
+    updateProfile,
+    changePassword,
     logout,
     refreshAccessToken,
     displayName,
