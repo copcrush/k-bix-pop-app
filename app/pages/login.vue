@@ -6,6 +6,7 @@ definePageMeta({
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const showPassword = ref(false)
 const auth = useAuth()
 const { t } = useKbixLocale()
 
@@ -107,7 +108,11 @@ async function onSubmit() {
             <UInput
               v-model="email"
               type="email"
-              autocomplete="email"
+              inputmode="email"
+              autocomplete="username"
+              autocapitalize="off"
+              autocorrect="off"
+              :spellcheck="false"
               :placeholder="t('login.emailPlaceholder')"
               icon="i-lucide-mail"
               size="lg"
@@ -118,13 +123,31 @@ async function onSubmit() {
           <UFormField :label="t('login.passwordLabel')" name="password" required>
             <UInput
               v-model="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               autocomplete="current-password"
+              autocapitalize="off"
+              autocorrect="off"
+              :spellcheck="false"
               :placeholder="t('login.passwordPlaceholder')"
               icon="i-lucide-lock"
               size="lg"
               class="w-full"
-            />
+            >
+              <template #trailing>
+                <UButton
+                  type="button"
+                  color="neutral"
+                  variant="ghost"
+                  square
+                  size="sm"
+                  class="-me-1"
+                  :aria-pressed="showPassword"
+                  :aria-label="showPassword ? t('login.hidePassword') : t('login.showPassword')"
+                  :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  @click.prevent="showPassword = !showPassword"
+                />
+              </template>
+            </UInput>
           </UFormField>
 
           <div class="flex items-center justify-end">
