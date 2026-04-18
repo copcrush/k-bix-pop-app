@@ -1,5 +1,40 @@
+/* Inter + Noto Sans Thai via Google Fonts; Satoshi is local in /public/fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap");
+
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme static {
   --color-green-50: #effdf5;
@@ -37,9 +72,23 @@
    */
   --kbix-theme-motion-duration: 260ms;
   --kbix-theme-motion-ease: cubic-bezier(0.33, 0, 0.25, 1);
+
+  --font-sans:
+    "Satoshi", "Inter", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html[lang='en'] {
+    font-family:
+      "Satoshi", "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
   /* Smoother root theme crossfade when using View Transitions API (Chromium, etc.) */
   @media (prefers-reduced-motion: no-preference) {
     ::view-transition-old(root),
