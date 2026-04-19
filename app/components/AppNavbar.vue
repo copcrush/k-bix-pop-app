@@ -8,8 +8,17 @@ const props = withDefaults(
 )
 
 const { t, locale, setLocale } = useKbixLocale()
-const auth = useAuth()
+const {
+  user,
+  isLoggedIn,
+  isAdmin,
+  roleLabelKey,
+  displayName,
+  initials,
+  logout,
+} = useAuth()
 const shipping = useShippingPrefs()
+const { currency } = useCurrencyPrefs()
 
 const shipOpen = ref(false)
 const draftCountry = ref(shipping.country.value)
@@ -41,26 +50,15 @@ const userMenuItems = computed(() => {
       }
 
   const accountItems: MenuItem[] = [
-    { type: 'label', label: t('nav.menuAccount') },
     {
-      label: t('nav.editProfile'),
-      icon: 'i-lucide-user-round-pen',
-      to: '/account/profile',
-    },
-    {
-      label: t('nav.changePassword'),
-      icon: 'i-lucide-key-round',
-      to: '/account/password',
-    },
-    {
-      label: t('nav.resetPasswordHelp'),
-      icon: 'i-lucide-mail-question',
-      to: '/forgot-password',
+      label: t('nav.account'),
+      icon: 'i-lucide-user',
+      to: '/account',
     },
   ]
 
   const groups: MenuItem[][] = [accountItems]
-  if (auth.isAdmin) {
+  if (isAdmin.value) {
     groups.push([
       { type: 'label', label: t('nav.menuAdministration') },
       {
@@ -75,7 +73,7 @@ const userMenuItems = computed(() => {
       label: t('nav.logout'),
       icon: 'i-lucide-log-out',
       onSelect: async () => {
-        await auth.logout()
+        await logout()
         await navigateTo('/')
       },
     },
@@ -83,7 +81,23 @@ const userMenuItems = computed(() => {
   return groups
 })
 
-const roleBadgeText = computed(() => t(auth.roleLabelKey))
+const roleBadgeText = computed(() => t(roleLabelKey.value))
+
+const currencyLabelKeys = {
+  THB: 'nav.currencyTHB',
+  USD: 'nav.currencyUSD',
+  KRW: 'nav.currencyKRW',
+  JPY: 'nav.currencyJPY',
+} as const
+
+const currencyOptions = computed(() => {
+  void locale.value
+  return KBIX_CURRENCY_CODES.map((code) => ({
+    value: code,
+    label: t(currencyLabelKeys[code]),
+    icon: KBIX_CURRENCY_FLAG_ICONS[code],
+  }))
+})
 </script>
 
 <template>
@@ -195,6 +209,49 @@ const roleBadgeText = computed(() => t(auth.roleLabelKey))
           </UButton>
         </div>
 
+        <span class="hidden text-[0.7rem] font-semibold tracking-wide text-slate-500 uppercase lg:inline dark:text-slate-400">
+          {{ t('nav.currency') }}
+        </span>
+        <div
+          class="rounded-xl border border-slate-200/90 bg-slate-50/90 p-0.5 shadow-inner dark:border-slate-700 dark:bg-slate-900/90"
+        >
+          <USelect
+            v-model="currency"
+            :items="currencyOptions"
+            value-key="value"
+            label-key="label"
+            size="xs"
+            class="min-w-[6.25rem] max-w-[11rem] border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 dark:bg-transparent"
+            :ui="{
+              base: 'h-auto min-h-8 items-center py-1.5',
+              trailingIcon: 'shrink-0 text-slate-500 dark:text-slate-400',
+              itemLabel: 'whitespace-normal break-words text-start leading-snug [overflow-wrap:anywhere]',
+            }"
+          >
+            <template #default="{ modelValue, ui }">
+              <span
+                v-if="modelValue != null"
+                data-slot="value"
+                :class="
+                  ui.value({
+                    class:
+                      'inline-flex min-w-0 items-center gap-1.5 whitespace-normal break-words text-start leading-snug [overflow-wrap:anywhere] pointer-events-none',
+                  })
+                "
+              >
+                <UIcon
+                  :name="kbixCurrencyFlagIcon(String(modelValue))"
+                  class="size-4 shrink-0 rounded-full ring-1 ring-slate-200/80 dark:ring-slate-600"
+                />
+                <span>{{ currencyOptions.find((o) => o.value === modelValue)?.label }}</span>
+              </span>
+              <span v-else data-slot="placeholder" :class="ui.placeholder({})">
+                {{ '\xa0' }}
+              </span>
+            </template>
+          </USelect>
+        </div>
+
         <UPopover v-model:open="shipOpen" :content="{ align: 'end', sideOffset: 8 }">
           <UButton
             color="neutral"
@@ -238,45 +295,66 @@ const roleBadgeText = computed(() => t(auth.roleLabelKey))
 
         <AppColorModeToggle />
 
-        <template v-if="!auth.isLoggedIn">
+        <template v-if="!isLoggedIn">
           <UButton
             to="/login"
             color="neutral"
-            variant="ghost"
+            variant="outline"
             size="md"
-            class="hidden rounded-full font-semibold sm:inline-flex"
+            icon="i-lucide-log-in"
+            class="rounded-full border-slate-200/90 px-3 font-semibold shadow-sm dark:border-slate-600"
           >
-            {{ t('nav.login') }}
+            <span class="max-w-[6.5rem] truncate sm:max-w-none">{{ t('nav.login') }}</span>
           </UButton>
           <UButton
             to="/register"
             color="primary"
             size="md"
-            class="rounded-full px-4 font-bold shadow-sm shadow-green-900/10"
+            class="rounded-full px-3 font-bold shadow-sm shadow-green-900/10 sm:px-4"
           >
             {{ t('nav.register') }}
           </UButton>
         </template>
 
-        <UDropdownMenu v-else :items="userMenuItems" :content="{ align: 'end', sideOffset: 10 }">
+        <UDropdownMenu v-if="isLoggedIn" :items="userMenuItems" :content="{ align: 'end', sideOffset: 10 }">
+          <template #content-top>
+            <div
+              class="flex flex-col items-center border-b border-slate-200/90 px-4 pb-4 pt-3 dark:border-slate-700/90"
+            >
+              <UAvatar
+                :text="initials(user)"
+                :alt="displayName(user)"
+                size="3xl"
+                class="size-16 shrink-0 bg-green-500/20 text-2xl font-semibold text-green-900 ring-2 ring-white shadow-sm dark:bg-green-500/30 dark:text-green-50 dark:ring-slate-900"
+              />
+              <p class="mt-3 max-w-[14rem] text-center text-sm font-semibold leading-snug text-slate-900 dark:text-slate-50">
+                {{ displayName(user) }}
+              </p>
+              <p class="mt-1 max-w-[14rem] break-all text-center text-xs leading-snug text-slate-500 dark:text-slate-400">
+                {{ user?.email }}
+              </p>
+            </div>
+          </template>
           <UButton
             color="neutral"
             variant="outline"
             size="md"
-            class="h-11 max-w-[14rem] rounded-full border-slate-200/90 bg-white/95 ps-1.5 pe-3 shadow-sm dark:border-slate-600 dark:bg-slate-900/75"
+            class="h-auto min-h-11 max-w-[16rem] gap-2 rounded-full border-slate-200/90 bg-white/95 py-2 ps-2 pe-2.5 shadow-sm dark:border-slate-600 dark:bg-slate-900/75"
           >
             <UAvatar
-              :text="auth.initials(auth.user)"
+              :text="initials(user)"
               size="sm"
               class="shrink-0 bg-green-500/20 text-green-900 dark:bg-green-500/30 dark:text-green-50"
             />
-            <span class="min-w-0 truncate text-left text-sm font-semibold text-slate-800 dark:text-slate-100">
-              {{ auth.displayName(auth.user) }}
-            </span>
-            <UBadge color="neutral" variant="subtle" size="xs" class="hidden shrink-0 font-semibold capitalize sm:inline-flex">
-              {{ roleBadgeText }}
-            </UBadge>
-            <UIcon name="i-lucide-chevron-down" class="size-4 shrink-0 text-slate-400" />
+            <div class="min-w-0 flex-1 text-left leading-tight">
+              <span class="block truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
+                {{ displayName(user) }}
+              </span>
+              <!-- <UBadge color="neutral" variant="subtle" size="xs" class="mt-1 inline-flex max-w-full truncate font-semibold capitalize">
+                {{ roleBadgeText }}
+              </UBadge> -->
+            </div>
+            <UIcon name="i-lucide-chevron-down" class="size-4 shrink-0 self-center text-slate-400" />
           </UButton>
         </UDropdownMenu>
       </div>

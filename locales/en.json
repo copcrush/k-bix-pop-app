@@ -19,8 +19,14 @@
     "changePassword": "Change password",
     "resetPasswordHelp": "Forgot password",
     "language": "Language",
+    "currency": "Currency",
+    "currencyTHB": "THB",
+    "currencyUSD": "USD",
+    "currencyKRW": "KRW",
+    "currencyJPY": "JPY",
     "switchToLight": "Switch to light theme",
-    "switchToDark": "Switch to dark theme"
+    "switchToDark": "Switch to dark theme",
+    "manageUser": "Manage account"
   },
   "account": {
     "eyebrow": "Your account",
@@ -52,7 +58,42 @@
     "resetSubmit": "Set new password",
     "resetSuccess": "Your password was reset. You can sign in.",
     "resetFailed": "Reset failed. The link may have expired.",
-    "backSignIn": "Back to sign in"
+    "backSignIn": "Back to sign in",
+    "manageTitle": "Manage account",
+    "manageSubtitle": "Update your profile, password, and shipping addresses in one place.",
+    "sectionProfile": "Profile & security",
+    "sectionAddresses": "Shipping addresses",
+    "emailHint": "Email is tied to your sign-in and cannot be changed here.",
+    "phoneLabel": "Phone",
+    "passwordSection": "Password",
+    "passwordOptionalHint": "Leave blank to keep your current password.",
+    "saveProfile": "Save profile & security",
+    "addressDefault": "Default",
+    "addressAdd": "Add address",
+    "addressEdit": "Edit",
+    "addressDelete": "Delete",
+    "addressDeleteConfirm": "Delete this address? This cannot be undone.",
+    "modalCancel": "Cancel",
+    "addressLine1": "Address line 1",
+    "addressLine2": "Address line 2 (optional)",
+    "addressCity": "City",
+    "addressState": "State / region",
+    "addressPostal": "Postal code",
+    "addressCountry": "Country code",
+    "addressCountryHint": "2-letter ISO, e.g. TH, US",
+    "addressRecipient": "Recipient name",
+    "addressLabel": "Label (optional)",
+    "addressSaved": "Address saved.",
+    "addressDeleted": "Address removed.",
+    "addressModalAdd": "New shipping address",
+    "addressModalEdit": "Edit shipping address",
+    "addressSave": "Save address",
+    "addressEmpty": "No saved addresses yet.",
+    "validationPasswordPolicy": "Use at least 8 characters with uppercase, lowercase, and a number.",
+    "validationPasswordMatch": "New password and confirmation do not match.",
+    "validationAddress": "Please fill all required address fields.",
+    "validationCountry": "Use a 2-letter country code.",
+    "profileAndSecuritySaved": "Profile and security saved."
   },
   "login": {
     "heroBrand": "k-bix-pop",
@@ -103,7 +144,8 @@
     "signInLink": "Sign in"
   },
   "common": {
-    "brand": "k-bix-pop"
+    "brand": "k-bix-pop",
+    "errorGeneric": "Something went wrong. Try again."
   },
   "footer": {
     "tagline": "k-bix-pop"

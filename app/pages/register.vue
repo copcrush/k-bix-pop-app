@@ -9,12 +9,12 @@ const firstName = ref('')
 const lastName = ref('')
 const errorMessage = ref('')
 const showPassword = ref(false)
-const auth = useAuth()
+const { register, pending } = useAuth()
 const { t } = useKbixLocale()
 
 async function onSubmit() {
   errorMessage.value = ''
-  const res = await auth.register({
+  const res = await register({
     email: email.value,
     password: password.value,
     firstName: firstName.value || undefined,
@@ -126,7 +126,7 @@ async function onSubmit() {
           block
           size="lg"
           class="mt-1 font-semibold"
-          :loading="auth.pending"
+          :loading="pending"
         >
           {{ t('signup.submit') }}
         </UButton>

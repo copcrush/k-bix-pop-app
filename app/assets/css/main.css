@@ -259,6 +259,26 @@
       inset -4px -4px 14px color-mix(in oklab, black 45%, transparent);
   }
 
+  /* Nested “reference 2” panels — softer inner stacks on account dashboard */
+  .clay-panel-ref2 {
+    border-radius: 1.35rem;
+    border: 1px solid color-mix(in oklab, var(--color-slate-200) 70%, var(--color-slate-300) 30%);
+    background: color-mix(in oklab, white 94%, var(--color-slate-50) 6%);
+    box-shadow:
+      6px 8px 22px color-mix(in oklab, var(--color-slate-900) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 92%, transparent),
+      inset 0 -1px 0 color-mix(in oklab, var(--color-slate-200) 40%, transparent);
+  }
+
+  .dark .clay-panel-ref2 {
+    border-color: color-mix(in oklab, var(--color-slate-700) 65%, var(--color-slate-800) 35%);
+    background: color-mix(in oklab, var(--color-slate-900) 92%, var(--color-slate-800) 8%);
+    box-shadow:
+      6px 10px 26px color-mix(in oklab, black 42%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 8%, transparent),
+      inset 0 -1px 0 color-mix(in oklab, black 35%, transparent);
+  }
+
   .clay-snippet {
     border-radius: 1rem;
     border-width: 2px;

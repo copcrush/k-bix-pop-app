@@ -1,4 +1,3 @@
-import { reactive } from 'vue'
 import type { AuthUser, LoginResponse, RefreshResponse, RegisterResponse } from '~/types/auth'
 import {
   getKbixPopApiClient,
@@ -100,9 +99,27 @@ export function useAuth() {
     return res
   }
 
-  async function updateProfile(payload: {
+  async function refreshUser() {
+    try {
+      const { data } = await getKbixPopApiClient().get<AuthUser>('/users/me')
+      user.value = data
+      persist()
+      return { ok: true as const }
+    }
+    catch (e: unknown) {
+      return {
+        ok: false as const,
+        message: getKbixApiErrorMessage(e, 'Could not load profile'),
+      }
+    }
+  }
+
+  async function updateManageUser(payload: {
     firstName?: string | null
     lastName?: string | null
+    phone?: string | null
+    currentPassword?: string
+    newPassword?: string
   }) {
     try {
       const { data } = await getKbixPopApiClient().patch<AuthUser>('/users/me', payload)
@@ -113,7 +130,7 @@ export function useAuth() {
     catch (e: unknown) {
       return {
         ok: false as const,
-        message: getKbixApiErrorMessage(e, 'Could not save profile'),
+        message: getKbixApiErrorMessage(e, 'Could not save changes'),
       }
     }
   }
@@ -164,8 +181,12 @@ export function useAuth() {
     return name.slice(0, 2).toUpperCase()
   }
 
-  /* reactive() so template `auth.pending` / `auth.isLoggedIn` unwrap Refs & ComputedRefs */
-  return reactive({
+  /**
+   * Plain refs + computeds (not wrapped in reactive()).
+   * Nesting computed refs inside reactive() can break template updates for `isLoggedIn`
+   * while `user` still renders — e.g. guest Register + logged-in menu at once.
+   */
+  return {
     user,
     accessToken,
     pending,
@@ -175,11 +196,12 @@ export function useAuth() {
     hydrate,
     login,
     register,
-    updateProfile,
+    refreshUser,
+    updateManageUser,
     changePassword,
     logout,
     refreshAccessToken,
     displayName,
     initials,
-  })
+  }
 }

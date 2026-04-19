@@ -7,12 +7,12 @@ const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const showPassword = ref(false)
-const auth = useAuth()
+const { login, pending } = useAuth()
 const { t } = useKbixLocale()
 
 async function onSubmit() {
   errorMessage.value = ''
-  const res = await auth.login(email.value, password.value)
+  const res = await login(email.value, password.value)
   if (res.ok) {
     await navigateTo('/')
     return
@@ -165,7 +165,7 @@ async function onSubmit() {
             block
             size="lg"
             class="mt-1 font-semibold"
-            :loading="auth.pending"
+            :loading="pending"
           >
             {{ t('login.submit') }}
           </UButton>
