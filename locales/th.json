@@ -19,8 +19,14 @@
     "changePassword": "เปลี่ยนรหัสผ่าน",
     "resetPasswordHelp": "ลืมรหัสผ่าน",
     "language": "ภาษา",
+    "currency": "สกุลเงิน",
+    "currencyTHB": "THB",
+    "currencyUSD": "USD",
+    "currencyKRW": "KRW",
+    "currencyJPY": "JPY",
     "switchToLight": "เปลี่ยนเป็นธีมสว่าง",
-    "switchToDark": "เปลี่ยนเป็นธีมมืด"
+    "switchToDark": "เปลี่ยนเป็นธีมมืด",
+    "manageUser": "จัดการบัญชี"
   },
   "account": {
     "eyebrow": "บัญชีของคุณ",
@@ -52,7 +58,42 @@
     "resetSubmit": "ตั้งรหัสผ่านใหม่",
     "resetSuccess": "รีเซ็ตรหัสผ่านแล้ว เข้าสู่ระบบได้เลย",
     "resetFailed": "รีเซ็ตไม่สำเร็จ ลิงก์อาจหมดอายุ",
-    "backSignIn": "กลับไปเข้าสู่ระบบ"
+    "backSignIn": "กลับไปเข้าสู่ระบบ",
+    "manageTitle": "จัดการบัญชี",
+    "manageSubtitle": "อัปเดตโปรไฟล์ รหัสผ่าน และที่อยู่จัดส่งในที่เดียว",
+    "sectionProfile": "โปรไฟล์และความปลอดภัย",
+    "sectionAddresses": "ที่อยู่จัดส่ง",
+    "emailHint": "อีเมลผูกกับการเข้าสู่ระบบ แก้ไขที่นี่ไม่ได้",
+    "phoneLabel": "โทรศัพท์",
+    "passwordSection": "รหัสผ่าน",
+    "passwordOptionalHint": "เว้นว่างหากไม่ต้องการเปลี่ยนรหัสผ่าน",
+    "saveProfile": "บันทึกโปรไฟล์และความปลอดภัย",
+    "addressDefault": "ค่าเริ่มต้น",
+    "addressAdd": "เพิ่มที่อยู่",
+    "addressEdit": "แก้ไข",
+    "addressDelete": "ลบ",
+    "addressDeleteConfirm": "ลบที่อยู่นี้? ไม่สามารถย้อนกลับได้",
+    "modalCancel": "ยกเลิก",
+    "addressLine1": "ที่อยู่บรรทัด 1",
+    "addressLine2": "ที่อยู่บรรทัด 2 (ไม่บังคับ)",
+    "addressCity": "เมือง / เขต",
+    "addressState": "รัฐ / จังหวัด",
+    "addressPostal": "รหัสไปรษณีย์",
+    "addressCountry": "รหัสประเทศ",
+    "addressCountryHint": "ISO 2 ตัวอักษร เช่น TH, US",
+    "addressRecipient": "ชื่อผู้รับ",
+    "addressLabel": "ป้ายชื่อ (ไม่บังคับ)",
+    "addressSaved": "บันทึกที่อยู่แล้ว",
+    "addressDeleted": "ลบที่อยู่แล้ว",
+    "addressModalAdd": "เพิ่มที่อยู่จัดส่ง",
+    "addressModalEdit": "แก้ไขที่อยู่จัดส่ง",
+    "addressSave": "บันทึกที่อยู่",
+    "addressEmpty": "ยังไม่มีที่อยู่ที่บันทึก",
+    "validationPasswordPolicy": "อย่างน้อย 8 ตัวอักษร มีตัวพิมพ์ใหญ่ เล็ก และตัวเลข",
+    "validationPasswordMatch": "รหัสผ่านใหม่กับการยืนยันไม่ตรงกัน",
+    "validationAddress": "กรอกข้อมูลที่อยู่ที่จำเป็นให้ครบ",
+    "validationCountry": "ใช้รหัสประเทศ 2 ตัวอักษร",
+    "profileAndSecuritySaved": "บันทึกโปรไฟล์และความปลอดภัยแล้ว"
   },
   "login": {
     "heroBrand": "k-bix-pop",
@@ -103,7 +144,8 @@
     "signInLink": "เข้าสู่ระบบ"
   },
   "common": {
-    "brand": "k-bix-pop"
+    "brand": "k-bix-pop",
+    "errorGeneric": "เกิดข้อผิดพลาด ลองอีกครั้ง"
   },
   "footer": {
     "tagline": "k-bix-pop"

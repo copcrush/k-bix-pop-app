@@ -5,6 +5,8 @@ export interface AuthUser {
   email: string
   firstName: string | null
   lastName: string | null
+  /** Present after API upgrade; may be absent in cached localStorage. */
+  phone?: string | null
   role: UserRole
   createdAt: string
   updatedAt: string

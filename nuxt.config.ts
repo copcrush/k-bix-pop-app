@@ -5,6 +5,11 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   modules: ['@nuxt/ui'],
+  icon: {
+    serverBundle: {
+      collections: ['circle-flags', 'lucide'],
+    },
+  },
   css: ['~/assets/css/main.css'],
   app: {
     head: {

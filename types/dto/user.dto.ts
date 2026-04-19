@@ -5,6 +5,7 @@ export interface UserPublicDto {
   email: string
   firstName: string | null
   lastName: string | null
+  phone?: string | null
   role: Role
   createdAt: string
   updatedAt: string
