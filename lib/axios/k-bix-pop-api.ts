@@ -12,8 +12,15 @@ import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig 
 /** Must stay in sync with `useAuth` localStorage key */
 export const KBIX_ACCESS_TOKEN_STORAGE_KEY = 'kbix_access_token'
 
+/** Set by Nuxt plugin from `runtimeConfig.public.apiBase` (see `plugins/kbix-api-runtime-config.ts`). */
+let runtimeResolvedBaseURL: string | null = null
+
+export function setKbixPopApiRuntimeBaseURL(url: string): void {
+  runtimeResolvedBaseURL = normalizeBaseURL(url.trim())
+}
+
 export type CreateKbixPopApiClientOptions = {
-  /** API root including `/api` prefix, e.g. `http://localhost:8888/api` */
+  /** API root including `/api` prefix, e.g. `https://api.example.com/api` */
   baseURL: string
   /** Send cookies (refresh token on API host). Default: true */
   withCredentials?: boolean
@@ -28,12 +35,15 @@ export function normalizeBaseURL(url: string): string {
 /**
  * Resolves public API base URL without calling Nuxt composables
  * (safe from plain `lib` imports during build).
+ * Prefer value from {@link setKbixPopApiRuntimeBaseURL} when running inside Nuxt.
  */
 export function resolvePublicApiBaseURL(): string {
+  if (runtimeResolvedBaseURL)
+    return runtimeResolvedBaseURL
   const raw = import.meta.env.NUXT_PUBLIC_API_BASE
   if (typeof raw === 'string' && raw.trim().length > 0)
     return normalizeBaseURL(raw.trim())
-  return normalizeBaseURL('http://localhost:8888/api')
+  return normalizeBaseURL('http://localhost:3000/api')
 }
 
 function defaultGetAccessToken(): string | null {
