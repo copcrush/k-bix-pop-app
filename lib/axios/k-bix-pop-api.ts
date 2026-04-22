@@ -32,13 +32,19 @@ export interface KbixNuxtProvidedApi {
   auth: AxiosInstance
 }
 
-export function resolveKbixApiBase(configured: string): string {
-  const trimmed = configured?.trim()
+const PRODUCTION_API_FALLBACK = 'https://k-bix-pop-api.vercel.app/api'
+const DEV_API_FALLBACK = 'http://localhost:8888/api'
+
+/** Normalizes runtime `apiBase`; invalid/empty values fall back to dev or production URL. */
+export function resolveKbixApiBase(configured: string | undefined): string {
+  const raw = configured?.trim()
+  const trimmed
+    = raw && raw !== 'undefined' && raw !== 'null' ? raw : ''
   if (trimmed)
     return trimmed.replace(/\/$/, '')
   if (import.meta.dev)
-    return 'http://localhost:8888/api'
-  return 'http://localhost:8888/api'
+    return DEV_API_FALLBACK
+  return PRODUCTION_API_FALLBACK
 }
 
 function isAuthBootstrapUnauthorized(config?: InternalAxiosRequestConfig): boolean {
