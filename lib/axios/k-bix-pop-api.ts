@@ -1,118 +1,134 @@
-/**
- * k-bix-pop REST HTTP client (Axios).
- *
- * Naming (common in production apps):
- * - `baseURL` — Axios option (camelCase); public env: `NUXT_PUBLIC_API_BASE`
- * - `createKbixPopApiClient` — factory when you need a dedicated instance (tests, scripts)
- * - `getKbixPopApiClient` — lazy singleton for the browser / SSR bundle (same as many codebases’ `apiClient`)
- * - `getApiClient` — alias of `getKbixPopApiClient` (familiar name from other projects)
- */
-import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
+import { useNuxtApp } from '#app'
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type InternalAxiosRequestConfig,
+} from 'axios'
 
-/** Must stay in sync with `useAuth` localStorage key */
-export const KBIX_ACCESS_TOKEN_STORAGE_KEY = 'kbix_access_token'
+export const KBIX_ACCESS_TOKEN_KEY = 'kbix_access_token'
 
-/** Set by Nuxt plugin from `runtimeConfig.public.apiBase` (see `plugins/kbix-api-runtime-config.ts`). */
-let runtimeResolvedBaseURL: string | null = null
+/** @deprecated Use {@link KBIX_ACCESS_TOKEN_KEY} — kept for existing imports */
+export const KBIX_ACCESS_TOKEN_STORAGE_KEY = KBIX_ACCESS_TOKEN_KEY
 
-export function setKbixPopApiRuntimeBaseURL(url: string): void {
-  runtimeResolvedBaseURL = normalizeBaseURL(url.trim())
-}
+const DEFAULT_HEADERS = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  Device: 'website(1.0)',
+} as const
 
-export type CreateKbixPopApiClientOptions = {
-  /** API root including `/api` prefix, e.g. `https://api.example.com/api` */
+export interface CreateKbixPopApiClientsOptions {
   baseURL: string
-  /** Send cookies (refresh token on API host). Default: true */
-  withCredentials?: boolean
-  /** Override how the Bearer token is read (default: localStorage on client) */
-  getAccessToken?: () => string | null
+  getAccessToken?: () => string | null | undefined
+  onUnauthorized?: () => void | Promise<void>
 }
 
-export function normalizeBaseURL(url: string): string {
-  return url.replace(/\/+$/, '')
+export interface KbixPopApiClients {
+  publicApi: AxiosInstance
+  authApi: AxiosInstance
 }
 
-/**
- * Resolves public API base URL without calling Nuxt composables
- * (safe from plain `lib` imports during build).
- * Prefer value from {@link setKbixPopApiRuntimeBaseURL} when running inside Nuxt.
- */
-export function resolvePublicApiBaseURL(): string {
-  if (runtimeResolvedBaseURL)
-    return runtimeResolvedBaseURL
-  const raw = import.meta.env.NUXT_PUBLIC_API_BASE
-  if (typeof raw === 'string' && raw.trim().length > 0)
-    return normalizeBaseURL(raw.trim())
-  return normalizeBaseURL('http://localhost:3000/api')
+export interface KbixNuxtProvidedApi {
+  public: AxiosInstance
+  auth: AxiosInstance
 }
 
-function defaultGetAccessToken(): string | null {
-  if (typeof localStorage === 'undefined')
-    return null
-  return localStorage.getItem(KBIX_ACCESS_TOKEN_STORAGE_KEY)
+export function resolveKbixApiBase(configured: string): string {
+  const trimmed = configured?.trim()
+  if (trimmed)
+    return trimmed.replace(/\/$/, '')
+  if (import.meta.dev)
+    return 'http://localhost:8888/api'
+  return 'http://localhost:8888/api'
 }
 
-export function createKbixPopApiClient(options: CreateKbixPopApiClientOptions): AxiosInstance {
-  const baseURL = normalizeBaseURL(options.baseURL)
-  const withCredentials = options.withCredentials ?? true
-  const getToken = options.getAccessToken ?? defaultGetAccessToken
+function isAuthBootstrapUnauthorized(config?: InternalAxiosRequestConfig): boolean {
+  const url = config?.url ?? ''
+  return (
+    url.includes('/auth/login')
+    || url.includes('/auth/register')
+    || url.includes('/auth/forgot-password')
+    || url.includes('/auth/reset-password')
+  )
+}
 
-  const client = axios.create({
+export function createKbixPopApiClients(
+  options: CreateKbixPopApiClientsOptions,
+): KbixPopApiClients {
+  const { baseURL, getAccessToken, onUnauthorized } = options
+
+  const publicApi = axios.create({
     baseURL,
-    withCredentials,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    validateStatus: (status) => status >= 200 && status < 300,
+    withCredentials: true,
+    headers: { ...DEFAULT_HEADERS },
   })
 
-  client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const token = getToken()
-    if (token) {
+  const authApi = axios.create({
+    baseURL,
+    withCredentials: true,
+    headers: { ...DEFAULT_HEADERS },
+  })
+
+  authApi.interceptors.request.use((config) => {
+    const token = getAccessToken?.()
+    if (token)
       config.headers.Authorization = `Bearer ${token}`
-    }
     return config
   })
 
-  return client
+  authApi.interceptors.response.use(
+    res => res,
+    async (error: AxiosError) => {
+      if (error.response?.status === 401 && !isAuthBootstrapUnauthorized(error.config)) {
+        try {
+          await onUnauthorized?.()
+        }
+        catch {
+          return Promise.reject(error)
+      }
+    }
+    return Promise.reject(error)
+  })
+
+  return { publicApi, authApi }
 }
 
-let singleton: AxiosInstance | null = null
-let singletonBaseURL: string | null = null
-
-/**
- * Shared Axios instance for the storefront API (credentials + Bearer from storage).
- * Prefer this over ad-hoc `$fetch` when you need interceptors, timeouts, and upload progress.
- */
-export function getKbixPopApiClient(): AxiosInstance {
-  const baseURL = resolvePublicApiBaseURL()
-  if (!singleton || singletonBaseURL !== baseURL) {
-    singleton = createKbixPopApiClient({ baseURL })
-    singletonBaseURL = baseURL
+export function getKbixApiErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { message?: string } | undefined
+    if (data?.message && typeof data.message === 'string')
+      return data.message
+    if (error.message)
+      return error.message
   }
-  return singleton
-}
-
-/** Familiar alias used in many repos (“api client” = typed HTTP singleton) */
-export const getApiClient = getKbixPopApiClient
-
-export function isKbixAxiosError(error: unknown): error is AxiosError {
-  return axios.isAxiosError(error)
-}
-
-/** Best-effort message from Nest validation or Axios */
-export function getKbixApiErrorMessage(error: unknown, fallback = 'Request failed'): string {
-  if (!isKbixAxiosError(error))
-    return error instanceof Error ? error.message : fallback
-
-  const data = error.response?.data as { message?: string | string[] } | undefined
-  const msg = data?.message
-  if (Array.isArray(msg))
-    return msg.join(', ')
-  if (typeof msg === 'string' && msg.length > 0)
-    return msg
-  if (error.message)
+  if (error instanceof Error && error.message)
     return error.message
   return fallback
+}
+
+function getNuxtApiClients(): KbixNuxtProvidedApi {
+  const nuxtApp = useNuxtApp()
+  const api = nuxtApp.$api as KbixNuxtProvidedApi | undefined
+  if (!api?.auth || !api?.public) {
+    throw new Error(
+      'K-Bix API clients are not registered. Ensure the kbix-api Nuxt plugin is loaded.',
+    )
+  }
+  return api
+}
+
+export function getKbixPopApiClient(): AxiosInstance {
+  return getNuxtApiClients().auth
+}
+
+export function getKbixPopPublicApiClient(): AxiosInstance {
+  return getNuxtApiClients().public
+}
+
+export function getKbixAccessTokenCookieOptions() {
+  return {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'lax' as const,
+    secure: !import.meta.dev,
+  }
 }

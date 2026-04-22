@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getKbixPopApiClient, getKbixApiErrorMessage } from '~~/lib/axios/k-bix-pop-api'
+import { getKbixPopPublicApiClient, getKbixApiErrorMessage } from '~~/lib/axios/k-bix-pop-api'
 
 definePageMeta({
   layout: 'auth',
@@ -39,7 +39,7 @@ async function onSubmit() {
 
   pending.value = true
   try {
-    await getKbixPopApiClient().post('/auth/reset-password', {
+    await getKbixPopPublicApiClient().post('/auth/reset-password', {
       token: token.value.trim(),
       password: password.value,
     })

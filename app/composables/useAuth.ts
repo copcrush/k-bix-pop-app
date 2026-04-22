@@ -1,12 +1,14 @@
 import type { AuthUser, LoginResponse, RefreshResponse, RegisterResponse } from '~/types/auth'
 import {
+  getKbixAccessTokenCookieOptions,
   getKbixPopApiClient,
+  getKbixPopPublicApiClient,
   getKbixApiErrorMessage,
-  KBIX_ACCESS_TOKEN_STORAGE_KEY,
+  KBIX_ACCESS_TOKEN_KEY,
 } from '~~/lib/axios/k-bix-pop-api'
 
 const USER_KEY = 'kbix_user'
-const TOKEN_KEY = KBIX_ACCESS_TOKEN_STORAGE_KEY
+const TOKEN_KEY = KBIX_ACCESS_TOKEN_KEY
 
 export function useAuth() {
   const user = useState<AuthUser | null>('auth-user', () => null)
@@ -19,15 +21,21 @@ export function useAuth() {
     user.value?.role === 'ADMIN' ? 'nav.roleAdmin' : 'nav.roleCustomer',
   )
 
+  function tokenCookie() {
+    return useCookie(TOKEN_KEY, getKbixAccessTokenCookieOptions())
+  }
+
   function persist() {
     if (!import.meta.client) return
     if (user.value && accessToken.value) {
       localStorage.setItem(USER_KEY, JSON.stringify(user.value))
-      localStorage.setItem(TOKEN_KEY, accessToken.value)
+      tokenCookie().value = accessToken.value
+      localStorage.removeItem(TOKEN_KEY)
     }
     else {
       localStorage.removeItem(USER_KEY)
       localStorage.removeItem(TOKEN_KEY)
+      tokenCookie().value = null
     }
   }
 
@@ -35,7 +43,15 @@ export function useAuth() {
     if (!import.meta.client) return
     try {
       const raw = localStorage.getItem(USER_KEY)
-      const tok = localStorage.getItem(TOKEN_KEY)
+      let tok = tokenCookie().value ?? null
+      if (!tok) {
+        const legacy = localStorage.getItem(TOKEN_KEY)
+        if (legacy) {
+          tok = legacy
+          tokenCookie().value = legacy
+          localStorage.removeItem(TOKEN_KEY)
+        }
+      }
       if (raw && tok) {
         user.value = JSON.parse(raw) as AuthUser
         accessToken.value = tok
@@ -81,7 +97,7 @@ export function useAuth() {
   }) {
     pending.value = true
     try {
-      await getKbixPopApiClient().post<RegisterResponse>('/auth/register', payload)
+      await getKbixPopPublicApiClient().post<RegisterResponse>('/auth/register', payload)
       return { ok: true as const }
     }
     catch (e: unknown) {
