@@ -30,11 +30,11 @@ export default defineNuxtConfig({
     },
   },
   // Public keys are overridden at runtime by NUXT_PUBLIC_* env vars on Vercel.
-  // Default targets local Nest with global `/api` prefix on port 3000; override via NUXT_PUBLIC_API_BASE (e.g. http://localhost:8888/api).
+  // Default targets local API on port 8888; override via NUXT_PUBLIC_API_BASE.
   runtimeConfig: {
     public: {
       apiBase:
-        process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api',
+        process.env.NUXT_PUBLIC_API_BASE,
     },
   },
 })
