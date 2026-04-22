@@ -2,25 +2,24 @@ import {
   createKbixPopApiClients,
   KBIX_ACCESS_TOKEN_KEY,
   getKbixAccessTokenCookieOptions,
-  resolveKbixApiBase,
 } from '~~/lib/axios/k-bix-pop-api'
+import { useAuth } from '../composables/useAuth'
 
 export default defineNuxtPlugin({
   name: 'kbix-api',
   enforce: 'pre',
   setup() {
-    const runtimeConfig = useRuntimeConfig()
-    const baseURL = resolveKbixApiBase(
-      typeof runtimeConfig.public.apiBase === 'string'
-        ? runtimeConfig.public.apiBase
-        : undefined,
-    )
+    const apiBase = useRuntimeConfig().public.apiBase
+    const baseURL =
+      typeof apiBase === 'string' && apiBase.trim() !== ''
+        ? apiBase.trim().replace(/\/$/, '')
+        : 'http://localhost:8888/api'
 
     const accessToken = useCookie(KBIX_ACCESS_TOKEN_KEY, getKbixAccessTokenCookieOptions())
 
     const { publicApi, authApi } = createKbixPopApiClients({
       baseURL,
-      getAccessToken: () => accessToken.value ?? undefined,
+      accessTokenCookie: accessToken,
       onUnauthorized: async () => {
         if (!import.meta.client)
           return

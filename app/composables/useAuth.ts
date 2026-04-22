@@ -72,10 +72,10 @@ export function useAuth() {
   async function login(email: string, password: string) {
     pending.value = true
     try {
-      const { data: res } = await getKbixPopApiClient().post<LoginResponse>('/auth/login', {
-        email,
-        password,
-      })
+      const { data: res } = await getKbixPopPublicApiClient().post<LoginResponse>(
+        '/auth/login',
+        { email, password },
+      )
       user.value = res.user
       accessToken.value = res.accessToken
       persist()
@@ -109,7 +109,7 @@ export function useAuth() {
   }
 
   async function refreshAccessToken() {
-    const { data: res } = await getKbixPopApiClient().post<RefreshResponse>('/auth/refresh')
+    const { data: res } = await getKbixPopPublicApiClient().post<RefreshResponse>('/auth/refresh')
     accessToken.value = res.accessToken
     persist()
     return res
@@ -169,16 +169,15 @@ export function useAuth() {
 
   async function logout() {
     const tok = accessToken.value
+    if (tok) {
+      try {
+        await getKbixPopApiClient().post('/auth/logout')
+      }
+      catch {
+        /* still clear client */
+      }
+    }
     clear()
-    if (!tok) return
-    try {
-      await getKbixPopApiClient().post('/auth/logout', {}, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-    }
-    catch {
-      /* still cleared client */
-    }
   }
 
   function displayName(u: AuthUser | null) {

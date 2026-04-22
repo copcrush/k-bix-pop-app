@@ -1,14 +1,7 @@
 import { useNuxtApp } from '#app'
-import axios, {
-  type AxiosError,
-  type AxiosInstance,
-  type InternalAxiosRequestConfig,
-} from 'axios'
+import axios, { type AxiosError, type AxiosInstance } from 'axios'
 
 export const KBIX_ACCESS_TOKEN_KEY = 'kbix_access_token'
-
-/** @deprecated Use {@link KBIX_ACCESS_TOKEN_KEY} — kept for existing imports */
-export const KBIX_ACCESS_TOKEN_STORAGE_KEY = KBIX_ACCESS_TOKEN_KEY
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -16,15 +9,9 @@ const DEFAULT_HEADERS = {
   Device: 'website(1.0)',
 } as const
 
-export interface CreateKbixPopApiClientsOptions {
-  baseURL: string
-  getAccessToken?: () => string | null | undefined
-  onUnauthorized?: () => void | Promise<void>
-}
-
-export interface KbixPopApiClients {
-  publicApi: AxiosInstance
-  authApi: AxiosInstance
+/** Minimal shape for `useCookie` so the axios helper stays decoupled from Nuxt types. */
+export type KbixAccessTokenCookie = {
+  readonly value: string | null | undefined
 }
 
 export interface KbixNuxtProvidedApi {
@@ -32,35 +19,13 @@ export interface KbixNuxtProvidedApi {
   auth: AxiosInstance
 }
 
-const PRODUCTION_API_FALLBACK = 'https://k-bix-pop-api.vercel.app/api'
-const DEV_API_FALLBACK = 'http://localhost:8888/api'
-
-/** Normalizes runtime `apiBase`; invalid/empty values fall back to dev or production URL. */
-export function resolveKbixApiBase(configured: string | undefined): string {
-  const raw = configured?.trim()
-  const trimmed
-    = raw && raw !== 'undefined' && raw !== 'null' ? raw : ''
-  if (trimmed)
-    return trimmed.replace(/\/$/, '')
-  if (import.meta.dev)
-    return DEV_API_FALLBACK
-  return PRODUCTION_API_FALLBACK
-}
-
-function isAuthBootstrapUnauthorized(config?: InternalAxiosRequestConfig): boolean {
-  const url = config?.url ?? ''
-  return (
-    url.includes('/auth/login')
-    || url.includes('/auth/register')
-    || url.includes('/auth/forgot-password')
-    || url.includes('/auth/reset-password')
-  )
-}
-
-export function createKbixPopApiClients(
-  options: CreateKbixPopApiClientsOptions,
-): KbixPopApiClients {
-  const { baseURL, getAccessToken, onUnauthorized } = options
+export function createKbixPopApiClients(options: {
+  baseURL: string
+  accessTokenCookie: KbixAccessTokenCookie
+  onUnauthorized?: () => void | Promise<void>
+}): { publicApi: AxiosInstance; authApi: AxiosInstance } {
+  const baseURL = options.baseURL.trim().replace(/\/$/, '')
+  const { accessTokenCookie, onUnauthorized } = options
 
   const publicApi = axios.create({
     baseURL,
@@ -75,25 +40,20 @@ export function createKbixPopApiClients(
   })
 
   authApi.interceptors.request.use((config) => {
-    const token = getAccessToken?.()
+    const token = accessTokenCookie.value
     if (token)
       config.headers.Authorization = `Bearer ${token}`
     return config
   })
 
   authApi.interceptors.response.use(
-    res => res,
+    (res) => res,
     async (error: AxiosError) => {
-      if (error.response?.status === 401 && !isAuthBootstrapUnauthorized(error.config)) {
-        try {
-          await onUnauthorized?.()
-        }
-        catch {
-          return Promise.reject(error)
-      }
-    }
-    return Promise.reject(error)
-  })
+      if (error.response?.status === 401)
+        await onUnauthorized?.()
+      return Promise.reject(error)
+    },
+  )
 
   return { publicApi, authApi }
 }
@@ -112,8 +72,7 @@ export function getKbixApiErrorMessage(error: unknown, fallback: string): string
 }
 
 function getNuxtApiClients(): KbixNuxtProvidedApi {
-  const nuxtApp = useNuxtApp()
-  const api = nuxtApp.$api as KbixNuxtProvidedApi | undefined
+  const api = useNuxtApp().$api as KbixNuxtProvidedApi | undefined
   if (!api?.auth || !api?.public) {
     throw new Error(
       'K-Bix API clients are not registered. Ensure the kbix-api Nuxt plugin is loaded.',
