@@ -10,7 +10,11 @@ export default defineNuxtPlugin({
   enforce: 'pre',
   setup() {
     const runtimeConfig = useRuntimeConfig()
-    const baseURL = resolveKbixApiBase(String(runtimeConfig.public.apiBase))
+    const baseURL = resolveKbixApiBase(
+      typeof runtimeConfig.public.apiBase === 'string'
+        ? runtimeConfig.public.apiBase
+        : undefined,
+    )
 
     const accessToken = useCookie(KBIX_ACCESS_TOKEN_KEY, getKbixAccessTokenCookieOptions())
 
