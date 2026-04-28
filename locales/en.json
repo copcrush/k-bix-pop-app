@@ -147,6 +147,18 @@
     "brand": "k-bix-pop",
     "errorGeneric": "Something went wrong. Try again."
   },
+  "home": {
+    "heroAria": "Featured releases carousel",
+    "ctaPreorder": "Pre-Order Now",
+    "ctaShop": "Shop Now",
+    "searchPlaceholder": "Search albums, artists, merch…",
+    "popularGroups": "Popular picks",
+    "newArrivals": "New arrivals",
+    "newArrivalsHint": "Mock catalog — layout only. Replace with API-driven products when ready.",
+    "addToCart": "Add to cart",
+    "filterAll": "All",
+    "noMatches": "No matches for this filter or search. Try “All” or clear the search box."
+  },
   "footer": {
     "tagline": "k-bix-pop"
   }
