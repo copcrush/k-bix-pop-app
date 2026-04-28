@@ -147,6 +147,18 @@
     "brand": "k-bix-pop",
     "errorGeneric": "เกิดข้อผิดพลาด ลองอีกครั้ง"
   },
+  "home": {
+    "heroAria": "แบนเนอร์ไฮไลต์สินค้า",
+    "ctaPreorder": "พรีออเดอร์เลย",
+    "ctaShop": "ช้อปเลย",
+    "searchPlaceholder": "ค้นหาอัลบั้ม ศิลปิน เมิร์ช…",
+    "popularGroups": "ยอดนิยม",
+    "newArrivals": "สินค้าใหม่",
+    "newArrivalsHint": "ข้อมูลจำลองสำหรับเลย์เอาต์เท่านั้น — พร้อมแล้วค่อยต่อ API จริง",
+    "addToCart": "ใส่ตะกร้า",
+    "filterAll": "ทั้งหมด",
+    "noMatches": "ไม่พบสินค้าตามตัวกรองหรือคำค้น ลองเลือก “ทั้งหมด” หรือล้างช่องค้นหา"
+  },
   "footer": {
     "tagline": "k-bix-pop"
   }
