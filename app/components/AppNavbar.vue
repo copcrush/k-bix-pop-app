@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 const props = withDefaults(
   defineProps<{
     /** Admin shell: slimmer actions, link back to storefront */
@@ -37,19 +39,10 @@ function saveShipping() {
   shipOpen.value = false
 }
 
-const userMenuItems = computed(() => {
+const userMenuItems = computed((): DropdownMenuItem[][] => {
   void locale.value
-  type MenuLabel = { type: 'label'; label: string }
-  type MenuItem =
-    | MenuLabel
-    | {
-        label: string
-        icon?: string
-        to?: string
-        onSelect?: () => void | Promise<void>
-      }
 
-  const accountItems: MenuItem[] = [
+  const accountItems: DropdownMenuItem[] = [
     {
       label: t('nav.account'),
       icon: 'i-lucide-user',
@@ -57,7 +50,7 @@ const userMenuItems = computed(() => {
     },
   ]
 
-  const groups: MenuItem[][] = [accountItems]
+  const groups: DropdownMenuItem[][] = [accountItems]
   if (isAdmin.value) {
     groups.push([
       { type: 'label', label: t('nav.menuAdministration') },
@@ -72,6 +65,7 @@ const userMenuItems = computed(() => {
     {
       label: t('nav.logout'),
       icon: 'i-lucide-log-out',
+      color: 'error',
       onSelect: async () => {
         await logout()
         await navigateTo('/')
@@ -98,6 +92,30 @@ const currencyOptions = computed(() => {
     icon: KBIX_CURRENCY_FLAG_ICONS[code],
   }))
 })
+
+const userMenuUi = {
+  content:
+    'min-w-[19rem] w-80 rounded-2xl border border-slate-200/90 bg-white p-2 shadow-[0_16px_48px_-16px_rgba(15,23,42,0.28)] ring-0 dark:border-slate-700/90 dark:bg-slate-900 dark:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.65)]',
+  viewport: 'divide-y divide-slate-200/80 dark:divide-slate-700/80',
+  group: 'space-y-0.5 p-2',
+  label:
+    'px-3 py-2 text-[0.65rem] font-bold tracking-wider text-slate-400 uppercase dark:text-slate-500',
+  item: [
+    'gap-3 rounded-lg px-3 py-2.5 font-medium text-slate-700 transition-[color,font-weight] before:rounded-lg before:transition-colors',
+    'outline-none focus-visible:outline-none',
+    'data-highlighted:font-semibold data-highlighted:text-primary data-highlighted:before:bg-primary/10',
+    'data-[state=open]:font-semibold data-[state=open]:text-primary data-[state=open]:before:bg-primary/10',
+    'dark:text-slate-300 dark:data-highlighted:text-green-300 dark:data-highlighted:before:bg-primary/15',
+    'dark:data-[state=open]:text-green-300 dark:data-[state=open]:before:bg-primary/15',
+  ].join(' '),
+  itemLeadingIcon: [
+    'size-5 text-slate-500 transition-colors',
+    'group-data-highlighted:text-primary group-data-[state=open]:text-primary',
+    'dark:text-slate-400 dark:group-data-highlighted:text-green-400 dark:group-data-[state=open]:text-green-400',
+  ].join(' '),
+  itemLabel: 'text-sm',
+  separator: '-mx-1 my-1.5 h-px bg-slate-200/90 dark:bg-slate-700/90',
+}
 </script>
 
 <template>
@@ -316,23 +334,37 @@ const currencyOptions = computed(() => {
           </UButton>
         </template>
 
-        <UDropdownMenu v-if="isLoggedIn" :items="userMenuItems" :content="{ align: 'end', sideOffset: 10 }">
+        <UDropdownMenu
+          v-if="isLoggedIn"
+          :items="userMenuItems"
+          size="md"
+          :content="{ align: 'end', sideOffset: 10 }"
+          :ui="userMenuUi"
+        >
           <template #content-top>
             <div
-              class="flex flex-col items-center border-b border-slate-200/90 px-4 pb-4 pt-3 dark:border-slate-700/90"
+              class="flex items-center gap-3.5 border-b border-slate-200/90 px-4 py-4 dark:border-slate-700/90"
             >
-              <UAvatar
-                :text="initials(user)"
-                :alt="displayName(user)"
-                size="3xl"
-                class="size-16 shrink-0 bg-green-500/20 text-2xl font-semibold text-green-900 ring-2 ring-white shadow-sm dark:bg-green-500/30 dark:text-green-50 dark:ring-slate-900"
-              />
-              <p class="mt-3 max-w-[14rem] text-center text-sm font-semibold leading-snug text-slate-900 dark:text-slate-50">
-                {{ displayName(user) }}
-              </p>
-              <p class="mt-1 max-w-[14rem] break-all text-center text-xs leading-snug text-slate-500 dark:text-slate-400">
-                {{ user?.email }}
-              </p>
+              <div class="relative shrink-0">
+                <UAvatar
+                  :text="initials(user)"
+                  :alt="displayName(user)"
+                  size="lg"
+                  class="size-12 bg-green-500/20 text-base font-semibold text-green-900 ring-2 ring-white shadow-sm dark:bg-green-500/30 dark:text-green-50 dark:ring-slate-900"
+                />
+                <span
+                  class="absolute end-0 bottom-0 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-semibold text-slate-900 dark:text-slate-50">
+                  {{ displayName(user) }}
+                </p>
+                <p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                  {{ user?.email }}
+                </p>
+              </div>
             </div>
           </template>
           <UButton

@@ -389,4 +389,64 @@
   .dark .social-oauth-label {
     color: var(--color-slate-100);
   }
+
+  /* Admin shell — matches storefront green / fuchsia theme */
+  .admin-shell {
+    --admin-accent: var(--color-green-600);
+    --admin-accent-hover: var(--color-green-700);
+    --admin-surface: #ffffff;
+    --admin-muted: #64748b;
+  }
+
+  .dark .admin-shell {
+    --admin-surface: var(--color-slate-900);
+  }
+
+  .admin-primary-btn {
+    background-color: var(--admin-accent);
+  }
+
+  .admin-primary-btn:hover {
+    background-color: var(--admin-accent-hover);
+  }
+
+  .admin-orders-table :deep(thead) {
+    background: rgb(248 250 252 / 0.8);
+  }
+
+  .dark .admin-orders-table :deep(thead) {
+    background: color-mix(in oklab, var(--color-slate-900) 92%, var(--color-slate-800) 8%);
+  }
+
+  .admin-orders-table :deep(th) {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--admin-muted);
+  }
+
+  .admin-orders-table :deep(tr) {
+    border-bottom: 1px solid rgb(241 245 249);
+  }
+
+  .dark .admin-orders-table :deep(tr) {
+    border-bottom-color: color-mix(in oklab, var(--color-slate-800) 80%, transparent);
+  }
+
+  .admin-orders-table :deep(tr:hover) {
+    background: color-mix(in oklab, var(--color-green-50) 55%, transparent);
+  }
+
+  .dark .admin-orders-table :deep(tr:hover) {
+    background: color-mix(in oklab, var(--color-green-950) 35%, transparent);
+  }
+
+  .admin-orders-table :deep(tr[data-selected='true']) {
+    background: color-mix(in oklab, var(--color-green-100) 65%, transparent);
+  }
+
+  .dark .admin-orders-table :deep(tr[data-selected='true']) {
+    background: color-mix(in oklab, var(--color-green-900) 40%, transparent);
+  }
 }
