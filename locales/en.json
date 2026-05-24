@@ -161,5 +161,66 @@
   },
   "footer": {
     "tagline": "k-bix-pop"
+  },
+  "admin": {
+    "brand": "k-bix-pop",
+    "collapseSidebar": "Collapse sidebar",
+    "searchPlaceholder": "Search…",
+    "goToShop": "Go to Shop",
+    "nav": {
+      "menu": "Menu",
+      "tools": "Tools",
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "invoice": "Invoice",
+      "confirmOrders": "Confirm Orders",
+      "customers": "Customers",
+      "products": "Products",
+      "inventory": "Inventory",
+      "messages": "Messages",
+      "returns": "Returns",
+      "analytics": "Analytics",
+      "promotions": "Promotions / Discount",
+      "integrations": "Integrations",
+      "settings": "Settings"
+    },
+    "placeholder": {
+      "title": "Coming soon",
+      "body": "This section is under construction."
+    },
+    "orders": {
+      "title": "Orders",
+      "export": "Export",
+      "create": "Create Order",
+      "tableView": "Table View",
+      "filter": "Filter",
+      "sort": "Sort",
+      "showStats": "Show Statistics",
+      "lastUpdate": "Last update",
+      "refresh": "Refresh",
+      "showPerPage": "Showing per page",
+      "prev": "Prev",
+      "next": "Next",
+      "goToPage": "Go to page",
+      "selected": "{count} Selected",
+      "editInfo": "Edit Info",
+      "delete": "Delete",
+      "clearSelection": "Clear selection",
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "colOrder": "Orders",
+      "colDate": "Date",
+      "colCustomer": "Customer",
+      "colDelivery": "Delivery",
+      "colItems": "Items",
+      "colTotal": "Total",
+      "colPayment": "Payment",
+      "paymentSuccess": "Success",
+      "paymentPending": "Pending",
+      "actions": "Actions",
+      "actionView": "View",
+      "actionEdit": "Edit",
+      "actionDelete": "Delete"
+    }
   }
 }

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'admin'
+  layout: 'admin',
+  middleware: 'admin',
 })
+
+await navigateTo('/admin/orders', { replace: true })
 </script>
 
 <template>
-  <p class="text-muted">
-    Dashboard
-  </p>
+  <div />
 </template>

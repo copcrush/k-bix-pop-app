@@ -161,5 +161,66 @@
   },
   "footer": {
     "tagline": "k-bix-pop"
+  },
+  "admin": {
+    "brand": "k-bix-pop",
+    "collapseSidebar": "ย่อแถบด้านข้าง",
+    "searchPlaceholder": "ค้นหา…",
+    "goToShop": "ไปที่ร้านค้า",
+    "nav": {
+      "menu": "เมนู",
+      "tools": "เครื่องมือ",
+      "dashboard": "แดชบอร์ด",
+      "orders": "คำสั่งซื้อ",
+      "invoice": "ใบแจ้งหนี้",
+      "confirmOrders": "ยืนยันคำสั่งซื้อ",
+      "customers": "ลูกค้า",
+      "products": "สินค้า",
+      "inventory": "คลังสินค้า",
+      "messages": "ข้อความ",
+      "returns": "คืนสินค้า",
+      "analytics": "วิเคราะห์",
+      "promotions": "โปรโมชัน / ส่วนลด",
+      "integrations": "การเชื่อมต่อ",
+      "settings": "ตั้งค่า"
+    },
+    "placeholder": {
+      "title": "เร็วๆ นี้",
+      "body": "ส่วนนี้อยู่ระหว่างพัฒนา"
+    },
+    "orders": {
+      "title": "คำสั่งซื้อ",
+      "export": "ส่งออก",
+      "create": "สร้างคำสั่งซื้อ",
+      "tableView": "มุมมองตาราง",
+      "filter": "กรอง",
+      "sort": "เรียง",
+      "showStats": "แสดงสถิติ",
+      "lastUpdate": "อัปเดตล่าสุด",
+      "refresh": "รีเฟรช",
+      "showPerPage": "แสดงต่อหน้า",
+      "prev": "ก่อนหน้า",
+      "next": "ถัดไป",
+      "goToPage": "ไปหน้า",
+      "selected": "เลือก {count} รายการ",
+      "editInfo": "แก้ไขข้อมูล",
+      "delete": "ลบ",
+      "clearSelection": "ล้างการเลือก",
+      "selectAll": "เลือกทั้งหมด",
+      "selectRow": "เลือกแถว",
+      "colOrder": "คำสั่งซื้อ",
+      "colDate": "วันที่",
+      "colCustomer": "ลูกค้า",
+      "colDelivery": "การจัดส่ง",
+      "colItems": "รายการ",
+      "colTotal": "รวม",
+      "colPayment": "การชำระเงิน",
+      "paymentSuccess": "สำเร็จ",
+      "paymentPending": "รอดำเนินการ",
+      "actions": "การดำเนินการ",
+      "actionView": "ดู",
+      "actionEdit": "แก้ไข",
+      "actionDelete": "ลบ"
+    }
   }
 }
