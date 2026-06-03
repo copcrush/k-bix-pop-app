@@ -449,4 +449,12 @@
   .dark .admin-orders-table :deep(tr[data-selected='true']) {
     background: color-mix(in oklab, var(--color-green-900) 40%, transparent);
   }
+
+  .kbix-legal-notice summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .kbix-legal-notice summary::marker {
+    content: '';
+  }
 }

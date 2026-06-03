@@ -17,7 +17,7 @@ const { data: products, error, pending, refresh } = await useAsyncData(
   async () => {
     const { data, error: fetchError } = await supabase
       .from('products')
-      .select('id, name, description, price, stock_quantity, product_status, image_url, detail_images')
+      .select('id, name, description, price, stock_quantity, product_status, image_url, detail_images, artist_name')
       .order('name', { ascending: true })
 
     if (fetchError) {

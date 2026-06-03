@@ -108,6 +108,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSectionDef[] = [
         roles: ['owner', 'staff'],
       },
       {
+        labelKey: 'admin.nav.artistThemes',
+        href: '/admin/artists',
+        icon: 'i-lucide-palette',
+        roles: ['owner', 'staff'],
+      },
+      {
         labelKey: 'admin.nav.inventory',
         href: '/admin/inventory',
         icon: 'i-lucide-boxes',

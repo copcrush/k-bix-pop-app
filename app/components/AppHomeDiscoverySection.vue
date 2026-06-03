@@ -1,14 +1,22 @@
 <script setup lang="ts">
+import type { ArtistBrand } from '~/types/artistBrand'
 import type { HomePopularGroup } from '~/data/homeLandingMocks'
+import { artistChipStyle, findArtistBrand } from '~/utils/artistBrand'
 
-defineProps<{
+const props = defineProps<{
   groups: HomePopularGroup[]
+  artistBrands?: ArtistBrand[]
 }>()
 
 const filterGroup = defineModel<string | null>('filterGroup', { default: null })
 const search = defineModel<string>('search', { default: '' })
 
 const { t } = useKbixLocale()
+
+function chipAvatarStyle(slug: string) {
+  const brand = findArtistBrand(slug, props.artistBrands ?? [])
+  return brand ? artistChipStyle(brand) : null
+}
 </script>
 
 <template>
@@ -71,8 +79,9 @@ const { t } = useKbixLocale()
             @click="filterGroup = filterGroup === g.slug ? null : g.slug"
           >
             <span
-              class="flex size-8 items-center justify-center rounded-full bg-linear-to-br text-[0.65rem] font-bold text-white shadow-inner"
-              :class="g.markClass"
+              class="flex size-8 items-center justify-center rounded-full text-[0.65rem] font-bold text-white shadow-inner"
+              :class="chipAvatarStyle(g.slug) ? '' : `bg-linear-to-br ${g.markClass}`"
+              :style="chipAvatarStyle(g.slug) ?? undefined"
             >
               {{ g.initials }}
             </span>
