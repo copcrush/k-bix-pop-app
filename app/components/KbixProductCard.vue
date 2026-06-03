@@ -1,44 +1,26 @@
 <script setup lang="ts">
-import type { HomeProduct } from '~/data/homeLandingMocks'
-import type { KbixCurrencyCode } from '~/composables/useCurrencyPrefs'
+import type { CatalogProduct } from '~/types/catalogProduct'
+import { isProductAvailable } from '~/utils/productStatus'
+
+import type { ArtistBrand } from '~/types/artistBrand'
 
 const props = defineProps<{
-  product: HomeProduct
+  product: CatalogProduct
+  artistBrands?: ArtistBrand[]
 }>()
 
-const { currency } = useCurrencyPrefs()
 const { t } = useKbixLocale()
+const { addProduct } = useCart()
+const priceThb = computed(() => Number(props.product.price))
+const { formattedPrice } = useProductPrice(priceThb)
 
-/** Demo conversion from THB shelf price — not real FX. */
-const RATES_FROM_THB: Record<KbixCurrencyCode, number> = {
-  THB: 1,
-  USD: 0.029,
-  KRW: 37,
-  JPY: 4.5,
+const detailHref = computed(() => `/products/${props.product.id}`)
+const canAdd = computed(() => isProductAvailable(props.product.product_status))
+
+function onAddToCart() {
+  if (!canAdd.value) return
+  addProduct(props.product)
 }
-
-const displayAmount = computed(() => {
-  const code = currency.value
-  const raw = props.product.priceThb * RATES_FROM_THB[code]
-  const rounded = code === 'THB' || code === 'KRW' || code === 'JPY'
-    ? Math.round(raw)
-    : Math.round(raw * 100) / 100
-  return rounded
-})
-
-const formattedPrice = computed(() => {
-  const locale = currency.value === 'JPY' ? 'ja-JP' : currency.value === 'KRW' ? 'ko-KR' : 'en-US'
-  try {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency.value,
-      maximumFractionDigits: currency.value === 'THB' || currency.value === 'KRW' || currency.value === 'JPY' ? 0 : 2,
-    }).format(displayAmount.value)
-  }
-  catch {
-    return `${displayAmount.value} ${currency.value}`
-  }
-})
 </script>
 
 <template>
@@ -46,29 +28,38 @@ const formattedPrice = computed(() => {
     class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-200/60 transition-shadow hover:shadow-md dark:border-slate-700/90 dark:bg-slate-900/80 dark:ring-slate-700/80"
   >
     <NuxtLink
-      :to="product.href"
+      :to="detailHref"
       class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"
     >
       <img
-        :src="product.image"
-        :alt="product.title"
+        v-if="product.image_url"
+        :src="product.image_url"
+        :alt="product.name"
         width="600"
         height="600"
         loading="lazy"
         decoding="async"
         class="size-full object-cover transition duration-300 group-hover:scale-[1.03]"
       >
+      <div
+        v-else
+        class="flex size-full items-center justify-center text-sm text-slate-400"
+      >
+        {{ t('product.noImage') }}
+      </div>
     </NuxtLink>
     <div class="flex flex-1 flex-col gap-2 p-4">
       <div>
-        <p class="text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {{ product.group }}
-        </p>
+        <KbixArtistBadge
+          v-if="product.artist_name"
+          :name="product.artist_name"
+          :brands="artistBrands"
+        />
         <NuxtLink
-          :to="product.href"
+          :to="detailHref"
           class="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug text-slate-900 transition-colors hover:text-green-700 dark:text-slate-100 dark:hover:text-green-400"
         >
-          {{ product.title }}
+          {{ product.name }}
         </NuxtLink>
       </div>
       <div class="mt-auto flex items-center justify-between gap-2 pt-1">
@@ -82,8 +73,9 @@ const formattedPrice = computed(() => {
           square
           icon="i-lucide-shopping-cart"
           :aria-label="t('home.addToCart')"
+          :disabled="!canAdd"
           class="shrink-0"
-          @click.prevent.stop
+          @click.prevent.stop="onAddToCart"
         />
       </div>
     </div>

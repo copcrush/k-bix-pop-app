@@ -1,17 +1,33 @@
 <script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    mobile?: boolean
+  }>(),
+  { mobile: false },
+)
+
+const emit = defineEmits<{
+  navigate: []
+}>()
+
 const { t } = useKbixLocale()
-const { menuGroups, isActive, labelFor } = useAdminNav()
+const { sections, isSectionExpanded, toggleSection } = useAdminNav()
+const { isCollapsed, toggleCollapsed } = useSidebar()
 const { user, displayName, initials, logout } = useAuth()
 
 const searchQuery = ref('')
-const collapsed = ref(false)
+const collapsed = computed(() => !props.mobile && isCollapsed.value)
 
-const profileEmail = computed(() => user.value?.email ?? 'esther@gmail.com')
-const profileName = computed(() => displayName(user.value) || 'Esther Howard')
+const profileEmail = computed(() => user.value?.email ?? '')
+const profileName = computed(() => displayName(user.value) || '')
 
 async function onLogout() {
   await logout()
   await navigateTo('/login')
+}
+
+function onNavClick() {
+  emit('navigate')
 }
 
 function focusAdminSearch(e: KeyboardEvent) {
@@ -27,10 +43,14 @@ onUnmounted(() => window.removeEventListener('keydown', focusAdminSearch))
 
 <template>
   <aside
-    class="admin-sidebar flex h-dvh w-[220px] shrink-0 flex-col border-r border-slate-200/90 bg-white/95 backdrop-blur-xl dark:border-slate-800/90 dark:bg-slate-950/95"
-    :class="{ 'w-[68px]': collapsed }"
+    class="admin-sidebar flex h-dvh shrink-0 flex-col border-r border-slate-200/90 bg-white/95 backdrop-blur-xl transition-all duration-200 ease-in-out dark:border-slate-800/90 dark:bg-slate-950/95"
+    :class="[
+      mobile ? 'w-[220px]' : 'hidden lg:flex',
+      !mobile && (collapsed ? 'w-[68px]' : 'w-[220px]'),
+    ]"
+    role="navigation"
+    :aria-label="t('admin.navigationLabel')"
   >
-    <!-- Top: brand + workspace + search -->
     <div class="shrink-0 space-y-3 border-b border-slate-100 p-3 dark:border-slate-800">
       <div class="flex items-center gap-2 px-1">
         <div
@@ -43,14 +63,28 @@ onUnmounted(() => window.removeEventListener('keydown', focusAdminSearch))
             {{ t('admin.brand') }}
           </span>
           <button
+            v-if="!mobile"
             type="button"
             class="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             :aria-label="t('admin.collapseSidebar')"
-            @click="collapsed = !collapsed"
+            @click="toggleCollapsed"
           >
-            <UIcon name="i-lucide-chevrons-left" class="size-4" />
+            <UIcon
+              name="i-lucide-chevrons-left"
+              class="size-4 transition-transform duration-200"
+              :class="isCollapsed ? 'rotate-180' : ''"
+            />
           </button>
         </template>
+        <button
+          v-else-if="!mobile"
+          type="button"
+          class="mx-auto rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
+          :aria-label="t('admin.expandSidebar')"
+          @click="toggleCollapsed"
+        >
+          <UIcon name="i-lucide-chevrons-right" class="size-4" />
+        </button>
       </div>
 
       <template v-if="!collapsed">
@@ -84,84 +118,27 @@ onUnmounted(() => window.removeEventListener('keydown', focusAdminSearch))
       </template>
     </div>
 
-    <!-- Scrollable nav -->
     <nav class="min-h-0 flex-1 overflow-y-auto px-2 py-3">
-      <div
-        v-for="group in menuGroups"
-        :key="group.labelKey"
-        class="mb-4"
-      >
-        <p
-          v-if="!collapsed"
-          class="mb-1.5 px-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"
-        >
-          {{ labelFor(group.labelKey) }}
-        </p>
-        <ul class="space-y-0.5">
-          <li
-            v-for="item in group.items"
-            :key="item.to"
-          >
-            <NuxtLink
-              :to="item.to"
-              class="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition"
-              :class="isActive(item.to)
-                ? 'bg-green-600 text-white shadow-sm dark:bg-green-600'
-                : 'text-slate-600 hover:bg-green-50 hover:text-green-700 dark:text-slate-300 dark:hover:bg-green-950/50 dark:hover:text-green-300'"
-              :title="collapsed ? labelFor(item.labelKey) : undefined"
-            >
-              <UIcon
-                :name="item.icon"
-                class="size-4 shrink-0"
-                :class="isActive(item.to) ? 'text-white' : 'text-slate-500 group-hover:text-green-600 dark:group-hover:text-green-400'"
-              />
-              <span v-if="!collapsed" class="min-w-0 flex-1 truncate">
-                {{ labelFor(item.labelKey) }}
-              </span>
-              <span
-                v-if="!collapsed && item.badge"
-                class="flex size-5 items-center justify-center rounded-full text-[10px] font-bold"
-                :class="isActive(item.to)
-                  ? 'bg-white/20 text-white'
-                  : 'bg-fuchsia-500 text-white'"
-              >
-                {{ item.badge }}
-              </span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
+      <AdminSidebarSection
+        v-for="section in sections"
+        :key="section.titleKey"
+        :section="section"
+        :collapsed="collapsed"
+        :expanded="collapsed || isSectionExpanded(section.titleKey)"
+        @toggle="toggleSection(section.titleKey)"
+        @navigate="onNavClick"
+      />
     </nav>
 
-    <!-- Bottom: profile + actions -->
     <div class="shrink-0 space-y-2 border-t border-slate-100 p-3 dark:border-slate-800">
-      <button
-        v-if="!collapsed"
-        type="button"
-        class="flex w-full items-center gap-2.5 rounded-lg border border-slate-200/80 bg-slate-50/50 px-2.5 py-2 text-left transition hover:border-green-300 hover:bg-green-50/40 dark:border-slate-700 dark:bg-slate-900/50 dark:hover:border-green-700/50 dark:hover:bg-green-950/40"
-      >
-        <UAvatar
-          :alt="profileName"
-          :text="initials(user)"
-          size="sm"
-          class="shrink-0 bg-green-500/20 text-green-800 dark:bg-green-500/30 dark:text-green-50"
-        />
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
-            {{ profileName }}
-          </p>
-          <p class="truncate text-xs text-slate-500 dark:text-slate-400">
-            {{ profileEmail }}
-          </p>
-        </div>
-        <UIcon name="i-lucide-chevrons-up-down" class="size-3.5 shrink-0 text-slate-400" />
-      </button>
+      <AdminSidebarUserCard :collapsed="collapsed" />
 
       <NuxtLink
         to="/"
         class="flex items-center justify-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-100 dark:bg-green-950/50 dark:text-green-300 dark:hover:bg-green-950/70"
         :class="collapsed ? 'px-2' : ''"
         :title="collapsed ? t('admin.goToShop') : undefined"
+        @click="onNavClick"
       >
         <UIcon name="i-lucide-external-link" class="size-4 shrink-0" />
         <span v-if="!collapsed">{{ t('admin.goToShop') }}</span>
@@ -172,7 +149,8 @@ onUnmounted(() => window.removeEventListener('keydown', focusAdminSearch))
         class="w-full text-center text-xs font-medium text-slate-500 transition hover:text-green-600 dark:hover:text-green-400"
         @click="onLogout"
       >
-        {{ t('nav.logout') }}
+        <span v-if="!collapsed">{{ t('nav.logout') }}</span>
+        <UIcon v-else name="i-lucide-log-out" class="mx-auto size-4" :aria-label="t('nav.logout')" />
       </button>
     </div>
   </aside>

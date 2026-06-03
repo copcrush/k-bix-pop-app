@@ -8,24 +8,20 @@ const props = defineProps<{
 
 const badge = computed(() => getProductStatusBadge(props.product.product_status))
 
-const formattedPrice = computed(() => {
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(Number(props.product.price))
-  }
-  catch {
-    return `$${props.product.price}`
-  }
-})
+
+const detailHref = computed(() => `/products/${props.product.id}`)
+const priceThb = computed(() => Number(props.product.price))
+const { formattedPrice } = useProductPrice(priceThb)
 </script>
 
 <template>
   <article
     class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm ring-1 ring-slate-200/50 transition-shadow duration-300 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-900/70 dark:ring-slate-700/60"
   >
-    <div class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+    <NuxtLink
+      :to="detailHref"
+      class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"
+    >
       <img
         v-if="product.image_url"
         :src="product.image_url"
@@ -48,13 +44,16 @@ const formattedPrice = computed(() => {
       >
         {{ badge.label }}
       </span>
-    </div>
+    </NuxtLink>
 
     <div class="flex flex-1 flex-col gap-3 p-5 sm:p-6">
       <div class="space-y-2">
-        <h3 class="line-clamp-2 text-base font-semibold leading-snug tracking-tight text-slate-900 dark:text-slate-50">
+        <NuxtLink
+          :to="detailHref"
+          class="line-clamp-2 text-base font-semibold leading-snug tracking-tight text-slate-900 transition-colors hover:text-green-700 dark:text-slate-50 dark:hover:text-green-400"
+        >
           {{ product.name }}
-        </h3>
+        </NuxtLink>
         <p
           v-if="product.description"
           class="line-clamp-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400"
