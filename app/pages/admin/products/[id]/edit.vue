@@ -34,8 +34,8 @@ const artistName = ref('')
 
 const coverFile = ref<File | null>(null)
 const coverPreview = ref<string | null>(null)
-const detailFiles = ref<File[]>([])
 const detailImages = ref<string[]>([])
+const galleryFieldRef = ref<{ resolveUrls: () => Promise<string[]> } | null>(null)
 
 const loaded = ref(false)
 
@@ -68,15 +68,6 @@ function onCoverChange(event: Event) {
     : product.value?.image_url ?? null
 }
 
-function onDetailChange(event: Event) {
-  const input = event.target as HTMLInputElement
-  detailFiles.value = input.files ? [...input.files] : []
-}
-
-function removeDetailImage(url: string) {
-  detailImages.value = detailImages.value.filter(u => u !== url)
-}
-
 async function submit() {
   if (!product.value) return
   formError.value = null
@@ -97,10 +88,7 @@ async function submit() {
       imageUrl = await uploadProductImage(coverFile.value)
     }
 
-    const mergedDetails = [...detailImages.value]
-    for (const file of detailFiles.value) {
-      mergedDetails.push(await uploadProductImage(file, 'products/detail'))
-    }
+    const mergedDetails = await galleryFieldRef.value?.resolveUrls() ?? [...detailImages.value]
 
     const row = {
       name: name.value.trim(),
@@ -139,7 +127,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="admin-page mx-auto max-w-2xl p-6 lg:p-8">
+  <div class="admin-page mx-auto max-w-4xl p-6 lg:p-8">
     <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
@@ -274,47 +262,10 @@ onUnmounted(() => {
         >
       </UFormField>
 
-      <UFormField :label="t('admin.products.fields.detailImages')">
-        <div
-          v-if="detailImages.length"
-          class="mb-3 flex flex-wrap gap-2"
-        >
-          <div
-            v-for="(url, idx) in detailImages"
-            :key="url"
-            class="relative"
-          >
-            <img
-              :src="url"
-              :alt="`Gallery ${idx + 1}`"
-              width="72"
-              height="72"
-              class="size-[4.5rem] rounded-lg border border-slate-200 object-cover dark:border-slate-600"
-            >
-            <button
-              type="button"
-              class="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-white shadow"
-              :aria-label="t('admin.products.removeImage')"
-              @click="removeDetailImage(url)"
-            >
-              <UIcon
-                name="i-lucide-x"
-                class="size-3"
-              />
-            </button>
-          </div>
-        </div>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-semibold dark:file:bg-slate-800"
-          @change="onDetailChange"
-        >
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          {{ t('admin.products.fields.detailImagesAddHint') }}
-        </p>
-      </UFormField>
+      <AdminProductGalleryField
+        ref="galleryFieldRef"
+        v-model="detailImages"
+      />
 
       <p
         v-if="formError"

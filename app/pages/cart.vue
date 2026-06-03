@@ -14,7 +14,7 @@ const lineRows = computed(() =>
 </script>
 
 <template>
-  <UContainer class="py-10 sm:py-12">
+  <div class="kbix-page py-10 sm:py-12">
     <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
       {{ t('cart.title') }}
     </h1>
@@ -118,5 +118,5 @@ const lineRows = computed(() =>
         />
       </aside>
     </div>
-  </UContainer>
+  </div>
 </template>

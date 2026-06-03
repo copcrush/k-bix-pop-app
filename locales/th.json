@@ -279,8 +279,14 @@
         "cover": "รูปปก",
         "coverReplaceHint": "ไม่เลือกไฟล์ = ใช้รูปปกเดิม · เลือกไฟล์ใหม่ = อัปโหลดแทนที่",
         "detailImages": "รูปแกลเลอรีเพิ่ม",
-        "detailImagesHint": "ไม่บังคับ — แสดงในหน้ารายละเอียดสินค้า",
-        "detailImagesAddHint": "อัปโหลดเพื่อเพิ่มรูป · กด × บนรูปย่อเพื่อลบ"
+        "detailImagesHint": "ไม่บังคับ — เก็บเป็น array ใน Supabase (detail_images) แสดงในหน้ารายละเอียดสินค้า",
+        "detailImagesAddHint": "อัปโหลดเพื่อเพิ่มรูป · กด × บนรูปย่อเพื่อลบ",
+        "detailImageAlt": "รูปแกลเลอรี {n}",
+        "detailGalleryDrop": "ลากรูปมาวางหรือคลิกเพื่อเลือกหลายไฟล์",
+        "detailGalleryFormats": "JPEG, PNG, WebP — สูงสุด 40 รูป",
+        "detailGalleryPending": "ใหม่",
+        "detailGalleryCount": "{n} รูปในแกลเลอรี",
+        "detailGalleryAddMore": "เพิ่มรูปอีก"
       },
       "errors": {
         "nameRequired": "กรุณากรอกชื่อสินค้า",

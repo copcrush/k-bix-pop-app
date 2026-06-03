@@ -72,7 +72,7 @@ useHead({
 
 <template>
   <div class="bg-default">
-    <UContainer class="py-8 sm:py-12">
+    <div class="kbix-page py-8 sm:py-12">
       <div
         v-if="pending"
         class="grid gap-10 lg:grid-cols-2"
@@ -229,6 +229,6 @@ useHead({
           </p>
         </div>
       </div>
-    </UContainer>
+    </div>
   </div>
 </template>

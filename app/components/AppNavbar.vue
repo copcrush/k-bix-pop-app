@@ -123,66 +123,67 @@ const userMenuUi = {
     class="sticky top-0 z-50 border-b border-slate-200/90 bg-linear-to-b from-white via-white to-green-50/40 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.35)] backdrop-blur-xl dark:border-slate-800/90 dark:from-slate-950 dark:via-slate-950 dark:to-green-950/30 dark:shadow-[0_12px_36px_-16px_rgba(0,0,0,0.75)]"
   >
     <div
-      class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-3 px-4 py-3.5 sm:px-5 md:flex-nowrap md:gap-x-4 md:py-4"
+      class="kbix-page flex w-full flex-col gap-2.5 py-3.5 md:py-4"
     >
-      <NuxtLink
-        to="/"
-        class="order-1 flex shrink-0 items-center gap-2.5 rounded-2xl px-1 py-0.5 transition-colors hover:bg-green-500/[0.08] dark:hover:bg-green-400/10"
-      >
-        <span
-          class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-green-400 via-green-500 to-fuchsia-500 text-white shadow-md ring-2 ring-white/80 dark:ring-slate-900/80"
+      <div class="flex min-w-0 items-center justify-between gap-3 sm:gap-4">
+        <div class="flex min-w-0 items-center gap-3 md:gap-6">
+        <NuxtLink
+          to="/"
+          class="flex shrink-0 items-center gap-2.5 rounded-2xl py-0.5 transition-colors hover:bg-green-500/[0.08] dark:hover:bg-green-400/10"
         >
-          <UIcon name="i-lucide-sparkles" class="size-[1.35rem]" />
-        </span>
-        <span class="flex min-w-0 flex-col leading-tight">
-          <span class="text-base font-bold tracking-tight text-green-700 sm:text-lg dark:text-green-400">
-            {{ t('common.brand') }}
+          <span
+            class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-green-400 via-green-500 to-fuchsia-500 text-white shadow-md ring-2 ring-white/80 dark:ring-slate-900/80"
+          >
+            <UIcon name="i-lucide-sparkles" class="size-[1.35rem]" />
           </span>
-          <span class="hidden max-w-[10rem] truncate text-[0.65rem] font-medium text-slate-500 sm:block dark:text-slate-400">
-            {{ t('login.mobileTagline') }}
+          <span class="flex min-w-0 flex-col leading-tight">
+            <span class="text-base font-bold tracking-tight text-green-700 sm:text-lg dark:text-green-400">
+              {{ t('common.brand') }}
+            </span>
+            <span class="hidden max-w-[10rem] truncate text-[0.65rem] font-medium text-slate-500 sm:block dark:text-slate-400">
+              {{ t('login.mobileTagline') }}
+            </span>
           </span>
-        </span>
-      </NuxtLink>
+        </NuxtLink>
 
-      <nav
-        class="order-3 flex w-full basis-full items-center gap-1.5 border-t border-slate-200/80 pt-2.5 md:order-2 md:w-auto md:basis-auto md:gap-2 md:border-t-0 md:pt-0 dark:border-slate-800/80"
-      >
-        <UButton
-          to="/"
-          color="neutral"
-          variant="ghost"
-          size="md"
-          icon="i-lucide-home"
-          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
-        >
-          <span class="hidden sm:inline">{{ t('nav.home') }}</span>
-        </UButton>
-        <UButton
-          v-if="variant === 'default'"
-          to="/cart"
-          color="neutral"
-          variant="ghost"
-          size="md"
-          icon="i-lucide-shopping-cart"
-          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
-        >
-          <span class="hidden sm:inline">{{ t('nav.cart') }}</span>
-        </UButton>
-        <UButton
-          v-if="variant === 'admin'"
-          to="/"
-          color="neutral"
-          variant="ghost"
-          size="md"
-          icon="i-lucide-store"
-          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
-        >
-          <span class="hidden sm:inline">{{ t('nav.home') }}</span>
-        </UButton>
-      </nav>
+        <nav class="hidden shrink-0 items-center gap-1.5 md:flex md:gap-2">
+          <UButton
+            to="/"
+            color="neutral"
+            variant="ghost"
+            size="md"
+            icon="i-lucide-home"
+            class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+          >
+            <span class="hidden sm:inline">{{ t('nav.home') }}</span>
+          </UButton>
+          <UButton
+            v-if="variant === 'default'"
+            to="/cart"
+            color="neutral"
+            variant="ghost"
+            size="md"
+            icon="i-lucide-shopping-cart"
+            class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+          >
+            <span class="hidden sm:inline">{{ t('nav.cart') }}</span>
+          </UButton>
+          <UButton
+            v-if="variant === 'admin'"
+            to="/"
+            color="neutral"
+            variant="ghost"
+            size="md"
+            icon="i-lucide-store"
+            class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+          >
+            <span class="hidden sm:inline">{{ t('nav.home') }}</span>
+          </UButton>
+        </nav>
+        </div>
 
       <div
-        class="order-2 ms-auto flex shrink-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2 md:order-3"
+        class="flex shrink-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2"
       >
         <span class="hidden text-[0.7rem] font-semibold tracking-wide text-slate-500 uppercase lg:inline dark:text-slate-400">
           {{ t('nav.language') }}
@@ -390,6 +391,44 @@ const userMenuUi = {
           </UButton>
         </UDropdownMenu>
       </div>
+      </div>
+
+      <nav
+        class="flex w-full items-center gap-1.5 border-t border-slate-200/80 pt-2.5 md:hidden dark:border-slate-800/80"
+      >
+        <UButton
+          to="/"
+          color="neutral"
+          variant="ghost"
+          size="md"
+          icon="i-lucide-home"
+          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+        >
+          <span class="hidden sm:inline">{{ t('nav.home') }}</span>
+        </UButton>
+        <UButton
+          v-if="variant === 'default'"
+          to="/cart"
+          color="neutral"
+          variant="ghost"
+          size="md"
+          icon="i-lucide-shopping-cart"
+          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+        >
+          <span class="hidden sm:inline">{{ t('nav.cart') }}</span>
+        </UButton>
+        <UButton
+          v-if="variant === 'admin'"
+          to="/"
+          color="neutral"
+          variant="ghost"
+          size="md"
+          icon="i-lucide-store"
+          class="rounded-full px-3 font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800/80"
+        >
+          <span class="hidden sm:inline">{{ t('nav.home') }}</span>
+        </UButton>
+      </nav>
     </div>
   </header>
 </template>

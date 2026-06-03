@@ -25,7 +25,8 @@ const artistName = ref('')
 
 const coverFile = ref<File | null>(null)
 const coverPreview = ref<string | null>(null)
-const detailFiles = ref<File[]>([])
+const detailImages = ref<string[]>([])
+const galleryFieldRef = ref<{ resolveUrls: () => Promise<string[]> } | null>(null)
 
 function onCoverChange(event: Event) {
   const input = event.target as HTMLInputElement
@@ -33,11 +34,6 @@ function onCoverChange(event: Event) {
   coverFile.value = file ?? null
   if (coverPreview.value) URL.revokeObjectURL(coverPreview.value)
   coverPreview.value = file ? URL.createObjectURL(file) : null
-}
-
-function onDetailChange(event: Event) {
-  const input = event.target as HTMLInputElement
-  detailFiles.value = input.files ? [...input.files] : []
 }
 
 async function submit() {
@@ -60,10 +56,7 @@ async function submit() {
   submitting.value = true
   try {
     const imageUrl = await uploadProductImage(coverFile.value)
-    const detailUrls: string[] = []
-    for (const file of detailFiles.value) {
-      detailUrls.push(await uploadProductImage(file, 'products/detail'))
-    }
+    const detailUrls = await galleryFieldRef.value?.resolveUrls() ?? []
 
     const row: CatalogProductInsert = {
       name: name.value.trim(),
@@ -100,7 +93,7 @@ async function submit() {
 </script>
 
 <template>
-  <div class="admin-page mx-auto max-w-2xl p-6 lg:p-8">
+  <div class="admin-page mx-auto max-w-4xl p-6 lg:p-8">
     <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
@@ -216,18 +209,10 @@ async function submit() {
         >
       </UFormField>
 
-      <UFormField :label="t('admin.products.fields.detailImages')">
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-semibold dark:file:bg-slate-800"
-          @change="onDetailChange"
-        >
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          {{ t('admin.products.fields.detailImagesHint') }}
-        </p>
-      </UFormField>
+      <AdminProductGalleryField
+        ref="galleryFieldRef"
+        v-model="detailImages"
+      />
 
       <p
         v-if="formError"

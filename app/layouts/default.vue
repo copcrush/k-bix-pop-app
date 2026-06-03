@@ -9,7 +9,7 @@ const { t } = useKbixLocale()
       <slot />
     </UMain>
     <UFooter class="border-t border-slate-200/80 dark:border-slate-800">
-      <div class="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
+      <div class="kbix-page flex flex-col gap-2 py-4">
         <span class="text-sm font-medium text-slate-800 dark:text-slate-200">
           {{ t('footer.tagline') }}
         </span>

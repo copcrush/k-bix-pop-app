@@ -44,10 +44,10 @@ const filteredProducts = computed(() => {
     />
 
     <section
-      class="py-10 sm:py-12"
+      class="py-6 sm:py-8"
       aria-labelledby="kbix-home-products-heading"
     >
-      <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <div class="kbix-page">
         <h2
           id="kbix-home-products-heading"
           class="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 sm:text-xl"
@@ -77,7 +77,7 @@ const filteredProducts = computed(() => {
 
         <div
           v-if="pending"
-          class="mt-8 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4"
+          class="mt-5 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           <div
             v-for="n in 8"
@@ -88,7 +88,7 @@ const filteredProducts = computed(() => {
 
         <div
           v-else-if="error"
-          class="mt-8 rounded-2xl border border-red-200/80 bg-red-50/80 px-6 py-8 text-center dark:border-red-900/50 dark:bg-red-950/30"
+          class="mt-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-6 py-8 text-center dark:border-red-900/50 dark:bg-red-950/30"
         >
           <p class="text-sm font-medium text-red-800 dark:text-red-300">
             {{ t('product.loadError') }}
@@ -107,7 +107,7 @@ const filteredProducts = computed(() => {
 
         <div
           v-else-if="filteredProducts.length"
-          class="mt-8 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4"
+          class="mt-5 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           <KbixProductCard
             v-for="p in filteredProducts"
@@ -118,7 +118,7 @@ const filteredProducts = computed(() => {
         </div>
         <p
           v-else
-          class="mt-10 text-center text-sm text-slate-500 dark:text-slate-400"
+          class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400"
         >
           {{ products?.length ? t('home.noMatches') : t('home.emptyCatalog') }}
         </p>

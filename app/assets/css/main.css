@@ -157,6 +157,30 @@
 }
 
 @layer components {
+  /* Storefront edge-to-edge — full width, horizontal gutter only */
+  .kbix-page {
+    width: 100%;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .kbix-page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .kbix-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .kbix-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
   /* Locale EN | TH — sliding selection pill */
   .kbix-locale-switch {
     position: relative;

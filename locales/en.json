@@ -279,8 +279,14 @@
         "cover": "Cover image",
         "coverReplaceHint": "Leave empty to keep the current cover. Choose a file to upload a replacement.",
         "detailImages": "Extra gallery images",
-        "detailImagesHint": "Optional — shown on the product detail page.",
-        "detailImagesAddHint": "Upload to add more gallery images. Click × on a thumbnail to remove."
+        "detailImagesHint": "Optional — stored as an array in Supabase (detail_images). Shown on the product detail page.",
+        "detailImagesAddHint": "Upload to add more gallery images. Click × on a thumbnail to remove.",
+        "detailImageAlt": "Gallery image {n}",
+        "detailGalleryDrop": "Drag images here or click to add multiple files",
+        "detailGalleryFormats": "JPEG, PNG, WebP — up to 40 images",
+        "detailGalleryPending": "New",
+        "detailGalleryCount": "{n} images in gallery",
+        "detailGalleryAddMore": "Add more images"
       },
       "errors": {
         "nameRequired": "Enter a product name.",

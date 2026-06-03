@@ -21,10 +21,10 @@ function chipAvatarStyle(slug: string) {
 
 <template>
   <section
-    class="border-b border-slate-200/80 bg-linear-to-b from-slate-50/90 to-white py-8 dark:border-slate-800/80 dark:from-slate-950 dark:to-slate-900"
+    class="border-b border-slate-200/80 bg-linear-to-b from-slate-50/90 to-white py-6 dark:border-slate-800/80 dark:from-slate-950 dark:to-slate-900"
     aria-labelledby="kbix-home-discovery-heading"
   >
-    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="kbix-page">
       <h2
         id="kbix-home-discovery-heading"
         class="sr-only"
@@ -37,11 +37,11 @@ function chipAvatarStyle(slug: string) {
         size="lg"
         icon="i-lucide-search"
         :placeholder="t('home.searchPlaceholder')"
-        class="w-full max-w-2xl shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/80"
+        class="w-full shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/80"
         :aria-label="t('home.searchPlaceholder')"
       />
 
-      <div class="mt-6">
+      <div class="mt-4">
         <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {{ t('home.popularGroups') }}
         </p>

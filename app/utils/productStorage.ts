@@ -31,3 +31,12 @@ export async function uploadProductImage(
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(path)
   return data.publicUrl
 }
+
+/** Upload many gallery images in parallel; stored as detail_images[] in Supabase. */
+export async function uploadProductImages(
+  files: File[],
+  prefix = 'products/detail',
+): Promise<string[]> {
+  if (!files.length) return []
+  return Promise.all(files.map(file => uploadProductImage(file, prefix)))
+}

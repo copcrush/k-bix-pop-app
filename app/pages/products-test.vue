@@ -42,7 +42,7 @@ const filteredProducts = computed(() => {
 <template>
   <div class="bg-default">
     <section class="border-b border-slate-200/70 bg-white/60 py-12 dark:border-slate-800/80 dark:bg-slate-900/40 sm:py-16">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="kbix-page">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
           Supabase catalog test
         </p>
@@ -76,7 +76,7 @@ const filteredProducts = computed(() => {
     </section>
 
     <section class="py-12 sm:py-16">
-      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+      <div class="kbix-page">
         <div
           v-if="pending"
           class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
