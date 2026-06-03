@@ -8,8 +8,7 @@ definePageMeta({
   middleware: 'admin',
 })
 
-const section = computed(() => String(route.params.section ?? ''))
-const path = computed(() => `/admin/${section.value}`)
+const path = computed(() => `/admin/${(route.params.slug as string[]).join('/')}`)
 
 const pageTitle = computed(() => {
   const key = titleKeyForPath(path.value)

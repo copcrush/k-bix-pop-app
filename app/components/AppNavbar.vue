@@ -57,7 +57,7 @@ const userMenuItems = computed((): DropdownMenuItem[][] => {
       {
         label: t('nav.admin'),
         icon: 'i-lucide-shield-check',
-        to: '/admin',
+        to: '/admin/dashboard',
       },
     ])
   }
