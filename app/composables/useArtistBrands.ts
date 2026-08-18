@@ -1,5 +1,6 @@
 import type { ArtistBrand, ArtistBrandInsert } from '~/types/artistBrand'
 import { findArtistBrand, slugifyArtistName } from '~/utils/artistBrand'
+import { getKbixAdminAuthHeaders } from '~/utils/kbixAdminFetch'
 
 const ARTIST_COLUMNS =
   'id, slug, name, color_start, color_end, gradient_angle, created_at, updated_at'
@@ -29,17 +30,11 @@ export function useArtistBrands() {
   }
 
   async function upsert(row: ArtistBrandInsert): Promise<ArtistBrand> {
-    const { data, error } = await supabase
-      .from('artists')
-      .upsert(
-        { ...row, updated_at: new Date().toISOString() },
-        { onConflict: 'slug' },
-      )
-      .select(ARTIST_COLUMNS)
-      .single()
-
-    if (error) throw error
-    return data as ArtistBrand
+    return await $fetch<ArtistBrand>('/api/admin/artists', {
+      method: 'POST',
+      body: row,
+      headers: getKbixAdminAuthHeaders(),
+    })
   }
 
   function matchBrand(

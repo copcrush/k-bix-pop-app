@@ -10,7 +10,6 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { t } = useKbixLocale()
-const supabase = useSupabaseClient()
 const { fetchById } = useArtistBrands()
 
 const artistId = computed(() => String(route.params.id ?? ''))
@@ -77,12 +76,11 @@ async function submit() {
       updated_at: new Date().toISOString(),
     }
 
-    const { error } = await supabase
-      .from('artists')
-      .update(row as Record<string, unknown>)
-      .eq('id', artistId.value)
-
-    if (error) throw error
+    await $fetch(`/api/admin/artists/${artistId.value}`, {
+      method: 'PATCH',
+      body: row,
+      headers: getKbixAdminAuthHeaders(),
+    })
 
     await clearNuxtData(['artist-brands', 'admin-artist-list', `admin-edit-artist-${artistId.value}`])
     await router.push('/admin/artists')
