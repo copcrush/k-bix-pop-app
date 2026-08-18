@@ -9,7 +9,6 @@ definePageMeta({
 })
 
 const { t } = useKbixLocale()
-const supabase = useSupabaseClient()
 const router = useRouter()
 
 const submitting = ref(false)
@@ -69,15 +68,13 @@ async function submit() {
       artist_name: artistName.value.trim() || null,
     }
 
-    const { data, error } = await supabase
-      .from('products')
-      .insert(row as Record<string, unknown>)
-      .select('id')
-      .single()
+    const data = await $fetch<{ id: string }>('/api/admin/products', {
+      method: 'POST',
+      body: row,
+      headers: getKbixAdminAuthHeaders(),
+    })
 
-    if (error) throw error
-
-    const id = (data as { id: string } | null)?.id
+    const id = data?.id
     if (!id) throw new Error('No product id returned')
 
     successId.value = id

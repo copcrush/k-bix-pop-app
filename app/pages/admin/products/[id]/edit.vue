@@ -11,7 +11,6 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { t } = useKbixLocale()
-const supabase = useSupabaseClient()
 const { fetchById } = useCatalogProducts()
 
 const productId = computed(() => String(route.params.id ?? ''))
@@ -101,12 +100,11 @@ async function submit() {
       artist_name: artistName.value.trim() || null,
     }
 
-    const { error } = await supabase
-      .from('products')
-      .update(row as Record<string, unknown>)
-      .eq('id', productId.value)
-
-    if (error) throw error
+    await $fetch(`/api/admin/products/${productId.value}`, {
+      method: 'PATCH',
+      body: row,
+      headers: getKbixAdminAuthHeaders(),
+    })
 
     await clearNuxtData(['home-products', 'admin-product-list', `product-${productId.value}`, `admin-edit-product-${productId.value}`])
     await router.push(`/products/${productId.value}`)

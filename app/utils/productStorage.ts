@@ -1,35 +1,23 @@
-const BUCKET = 'k-bix-pop-stores'
-
-function sanitizeFileName(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9.-]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 120)
-}
+import { getKbixAdminAuthHeaders } from '~/utils/kbixAdminFetch'
 
 export async function uploadProductImage(
   file: File,
   prefix = 'products',
 ): Promise<string> {
-  const supabase = useSupabaseClient()
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-  const base = sanitizeFileName(file.name.replace(/\.[^.]+$/, ''))
-  const path = `${prefix}/${Date.now()}-${base}.${ext}`
+  const form = new FormData()
+  form.append('file', file)
+  form.append('prefix', prefix)
 
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(path, file, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: file.type || undefined,
-    })
+  const res = await $fetch<{ publicUrl: string }>('/api/admin/storage', {
+    method: 'POST',
+    body: form,
+    headers: getKbixAdminAuthHeaders(),
+  })
 
-  if (error) throw error
-
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path)
-  return data.publicUrl
+  if (!res?.publicUrl) {
+    throw new Error('Upload did not return a public URL')
+  }
+  return res.publicUrl
 }
 
 /** Upload many gallery images in parallel; stored as detail_images[] in Supabase. */

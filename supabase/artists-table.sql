@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS public.artists (
 
 ALTER TABLE public.artists ENABLE ROW LEVEL SECURITY;
 
+-- Public SELECT only. Do not add USING (true) / WITH CHECK (true) for INSERT/UPDATE/DELETE.
+-- Admin writes use the service role via Nuxt /api/admin/*.
+
 -- Example: aespa purple → cyan gradient
 -- INSERT INTO public.artists (slug, name, color_start, color_end, gradient_angle)
 -- VALUES ('aespa', 'aespa', '#7c3aed', '#06b6d4', 135);

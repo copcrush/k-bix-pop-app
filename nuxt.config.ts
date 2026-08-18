@@ -36,12 +36,14 @@ export default defineNuxtConfig({
   // .env is not deployed — set NUXT_PUBLIC_API_BASE in Vercel → Settings → Environment Variables,
   // or rely on the production default below when the var is unset at build time.
   runtimeConfig: {
+    supabaseServiceKey: process.env.NUXT_SUPABASE_SERVICE_KEY || '',
     public: {
       apiBase:
         process.env.NUXT_PUBLIC_API_BASE
         || (process.env.NODE_ENV === 'development'
           ? 'http://localhost:8888/api'
           : 'https://k-bix-pop-api.vercel.app/api'),
+      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || '',
     },
   },
 })
